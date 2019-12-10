@@ -1,4 +1,4 @@
-# onix-front-end-test
+# onix-front-end
 
 ## Project setup
 ```
