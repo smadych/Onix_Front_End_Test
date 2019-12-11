@@ -19,7 +19,10 @@
         p.task-status(id="completed-tasks") Completed Tasks
       .open-tasks
         p.number(id="open-tasks-number") {{openTasks}}
-        p.task-status Open Tasks
+        //- Refs to Task component if an openTask variable greather then zero
+        p.task-status(v-if='openTasks > 0')
+          router-link(to="/tasks") Open Tasks
+        p.task-status(v-else) Open Tasks
     nav.nav-block
       ul
         li.menu Menu
@@ -112,8 +115,9 @@ aside .top-block .search::before {
   content: url(/images/Logo@3x.svg);
 }
 aside .top-block .search::after {
-  margin: auto 0 auto 70px;
   content: url(/images/Search@3x.svg);
+  height: 40px;
+  width: 40px;
 }
 aside .top-block .search::after:hover {
   cursor: pointer;
@@ -187,6 +191,10 @@ aside .info-block .number {
 aside .info-block .task-status {
   font-size: 12px;
   opacity: 0.5;
+}
+aside .info-block .task-status a {
+  text-decoration: none;
+  color: white;
 }
 aside .nav-block {
   letter-spacing: 0.5px;

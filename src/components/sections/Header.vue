@@ -21,12 +21,18 @@
                 li
                     //- Refers to Tasks component
                     router-link(to="/tasks") Task
-                li Kanban
+                li
+                    //- Refers to Kanban component
+                    router-link(to="/kanban") Kanban
                 li
                     //- Refers to Activity component
                     router-link(to="/activity") Activity
-                li Calendar
-                li Files
+                li
+                    //- Refers to Calendar component
+                    router-link(to="/calendar") Calendar
+                li
+                    //- Refers to Files component
+                    router-link(to="/files") Files
 </template>
 
 <script lang="ts">
