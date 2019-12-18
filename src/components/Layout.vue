@@ -2,21 +2,21 @@
 <template lang="pug">
   #layout
     //- Sends current index of the picture from Activity component
-    Aside(:index="currentPicture")
+    AsideComponent(:index="currentPicture")
     main
-        Header
+        HeaderComponent
         //- Show an appropriate component
         router-view(@showIndex="currentPicture=$event")
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import Aside from './sections/Aside.vue';
-import Header from './sections/Header.vue';
+import AsideComponent from './sections/AsideComponent.vue';
+import HeaderComponent from './sections/HeaderComponent.vue';
 
 @Component({
   components: {
-    Aside, Header,
+    AsideComponent, HeaderComponent,
   },
 })
 export default class Layout extends Vue {
@@ -314,28 +314,70 @@ main {
             }
             .wraper-task {
                 padding: 20px;
-                table {
-                    // display: flex;
-                    // flex-flow: column;
-                    padding: 30px;
-                    width: 80%;
-                    margin: 0 auto;
-                }
-                table, th, td {
-                    border-collapse: collapse;
-                }
-
-                tr {
-                    text-align: center;
-                }
-                th {
-                    padding-bottom: 15px;
-                }
-                td {
-                    padding: 15px;
-                }
+        }
+    }
+}
+.newTask {
+    border: 2px solid #EAEAEA;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    display: flex;
+    flex-direction: column;
+    padding: 0 20px;
+    margin: 5px auto;
+    form {
+        display: flex;
+        flex-direction: column;
+        .input-wrapper {
+            .titleInput {
+                margin-right: 10px;
             }
         }
+    }
+    h5 {
+        margin: 10px auto;
+        text-transform: uppercase;
+    }
+    input {
+        margin: 0 auto;
+        font-size: 20px;
+        outline: none;
+        border-radius: 5px;
+    }
+    .titleInput {
+        margin-bottom: 5px;
+    }
+    .descriptionInput {
+        margin-bottom: 15px;
+    }
+}
+    table {
+        padding: 30px;
+        width: 80%;
+        margin: 0 auto;
+    }
+    table, th, td {
+        border-collapse: collapse;
+    }
+
+    tr {
+        text-align: center;
+    }
+    th {
+        padding-bottom: 15px;
+    }
+    td {
+        padding: 15px;
+    }
+    .clear, .add {
+        width: 80px;
+        font-size: 14px;
+        background: #EAEAEA;
+        padding: 8px 15px 8px 15px;
+        border-radius: 15px;
+        margin: 0 auto;
+        margin-bottom: 10px;
+        outline: none;
     }
 }
 </style>

@@ -20,7 +20,7 @@
             ul
                 li
                     //- Refers to Tasks component
-                    router-link(to="/tasks") Task
+                    router-link(to="/tasks") Tasks
                 li
                     //- Refers to Kanban component
                     router-link(to="/kanban") Kanban

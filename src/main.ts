@@ -1,21 +1,21 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import App from './App.vue';
-import Tasks from './components/views/Tasks.vue';
-import Activity from './components/views/Activity.vue';
-import Calendar from './components/views/Calendar.vue';
-import Files from './components/views/Files.vue';
-import Kanban from './components/views/Kanban.vue';
+import TasksPart from './components/views/TasksPart.vue';
+import ActivityPart from './components/views/ActivityPart.vue';
+import CalendarPart from './components/views/CalendarPart.vue';
+import FilesPart from './components/views/FilesPart.vue';
+import KanbanPart from './components/views/KanbanPart.vue';
 
 Vue.config.productionTip = false;
 Vue.use(VueRouter);
 
 const routes = [
-  { path: '/tasks', component: Tasks },
-  { path: '/activity', component: Activity },
-  { path: '/calendar', component: Calendar },
-  { path: '/files', component: Files },
-  { path: '/kanban', component: Kanban },
+  { path: '/tasks', component: TasksPart },
+  { path: '/activity', component: ActivityPart },
+  { path: '/calendar', component: CalendarPart },
+  { path: '/files', component: FilesPart },
+  { path: '/kanban', component: KanbanPart },
 ];
 
 const router = new VueRouter({

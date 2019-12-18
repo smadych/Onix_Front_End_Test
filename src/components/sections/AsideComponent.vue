@@ -115,9 +115,13 @@ aside .top-block .search::before {
   content: url(/images/Logo@3x.svg);
 }
 aside .top-block .search::after {
-  content: url(/images/Search@3x.svg);
-  height: 40px;
-  width: 40px;
+  content: '';
+  background-image: url('/images/12search.svg');
+  background-size: 22px 22px;
+  background-repeat: no-repeat;
+  margin: auto 0 auto 70px;
+  height: 25px;
+  width: 25px;
 }
 aside .top-block .search::after:hover {
   cursor: pointer;
