@@ -69,7 +69,7 @@ export default class Aside extends Vue {
 <style>
 
 @font-face {
-    src: url(/fonts/HelveticaLight/HelveticaLight.ttf) format('ttf');
+    src: url(/assets/fonts/HelveticaLight/HelveticaLight.ttf) format('ttf');
     font-family: Helvetica-Light;
     font-weight: normal;
     font-style: normal;
@@ -112,11 +112,11 @@ aside .top-block h3 {
 }
 aside .top-block .search::before {
   margin: auto 13px auto 0;
-  content: url(/images/Logo@3x.svg);
+  content: url(/assets/images/Logo@3x.svg);
 }
 aside .top-block .search::after {
   content: '';
-  background-image: url('/images/12search.svg');
+  background-image: url('/assets/images/12search.svg');
   background-size: 22px 22px;
   background-repeat: no-repeat;
   margin: auto 0 auto 70px;
@@ -164,7 +164,7 @@ aside .profile-block .btn:hover {
   cursor: pointer;
 }
 aside .profile-block .profile-info::before {
-  background-image: url(/images/profile.png);
+  background-image: url(/assets/images/profile.png);
   margin: auto 13px auto 0;
   display: block;
   min-width: 50px;

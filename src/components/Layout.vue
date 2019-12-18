@@ -26,7 +26,7 @@ export default class Layout extends Vue {
 
 <style>
   @font-face {
-    src: url(/fonts/HelveticaLight/HelveticaLight.ttf);
+    src: url(/assets/fonts/HelveticaLight/HelveticaLight.ttf);
     font-family: Helvetica-Light;
 }
 
@@ -38,7 +38,6 @@ export default class Layout extends Vue {
 * {
     margin: 0;
     padding: 0;
-    background-image: url()
 }
 
 html, body {
@@ -251,7 +250,7 @@ main {
                 min-width: 40px;
                 height: 40px;
                 background-color: #CEF9C6;
-                content: url(/images/Icon@3x.svg);
+                content: url(/assets/images/Icon@3x.svg);
             }
 
             .message::before {
@@ -261,7 +260,7 @@ main {
                 min-width: 40px;
                 height: 40px;
                 background-color: #FFF8DD;
-                content: url(/images/chat.svg);
+                content: url(/assets/images/chat.svg);
             }
 
             .additional {
@@ -280,7 +279,7 @@ main {
                 height: 40px;
                 content: "";
                 display: block;
-                background-image: url(/images/cloud-storage-download.svg);
+                background-image: url(/assets/images/cloud-storage-download.svg);
                 background-size: contain;
                 background-repeat: no-repeat;
                 background-position: center;
@@ -292,18 +291,18 @@ main {
                 margin: 0 0 70px 87px;
                 padding-bottom: 20px;
                 .pic-first::before {
-                    background-image: url(/images/dubai-island.jpg);
+                    background-image: url(/assets/images/dubai-island.jpg);
                 }
 
                 .pic-second::before {
-                    background-image: url(/images/dubai-pic.jpeg);
+                    background-image: url(/assets/images/dubai-pic.jpeg);
                     background-size: 180px;
                 }
                 .pic-third::before {
-                    background-image: url(/images/dubai-pic2.jpg);
+                    background-image: url(/assets/images/dubai-pic2.jpg);
                 }
                 .pic-fourth::before {
-                    background-image: url(/images/burjkhalifa.jpg);
+                    background-image: url(/assets/images/burjkhalifa.jpg);
                 }
                 span {
                     margin-bottom: 10px;

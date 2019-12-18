@@ -55,7 +55,7 @@ export default Vue.extend({
             }
             margin: 40px 0 20px 0;
             .header-name::before {
-                background-image: url("/images/Shapes@2x.png");
+                background-image: url("/assets/images/Shapes@2x.png");
                 margin: 0 15px 0 30px;
                 background-color: #FFC200;
                 border-radius: 10px;
@@ -99,16 +99,16 @@ export default Vue.extend({
                 }
 
                 .first {
-                    background-image: url(/images/profile-cat.png);
+                    background-image: url(/assets/images/profile-cat.png);
                     margin-right: 5px;
                 }
                 .second {
-                    background-image: url(/images/profile-cat2.jpg);
+                    background-image: url(/assets/images/profile-cat2.jpg);
                     border-radius: 100%;
                     margin-right: 5px;
                 }
                 .third {
-                    background-image: url(/images/profile-image-cat.png);
+                    background-image: url(/assets/images/profile-image-cat.png);
                 }
 
                 .share-btn {
@@ -125,7 +125,7 @@ export default Vue.extend({
                     border-radius: 15px;
                 }
                 .chat-btn::before {
-                    background-image: url(/images/Shape@1x.svg);
+                    background-image: url(/assets/images/Shape@1x.svg);
                     width: 20px;
                     height: 20px;
                     background-size: 20px;
