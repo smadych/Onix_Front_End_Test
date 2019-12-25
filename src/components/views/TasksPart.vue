@@ -15,16 +15,16 @@
             .notifications-block
                 .wraper-task
                   table.tableDesk
-                    tbody
-                      transition-group.wrapper-table(name="list" tag="div")
-                          th(v-for="description in titlesTop"
-                          v-bind:key="description") {{description}}
-                          tr(v-for="(task) in arr" v-bind:key="task" ref='elements')
-                              td {{task.title}}
-                              td {{task.description}}
-                              td {{task.time}}
-                              td
-                                button.clear(@click="removeEl(task)") clear
+                    thead
+                      th(v-for="description in titlesTop"
+                      v-bind:key="description") {{description}}
+                    transition-group.wrapper-table(name="list" tag="tbody")
+                      tr(v-for="(task) in arr" v-bind:key="task" ref='elements')
+                          td {{task.title}}
+                          td {{task.description}}
+                          td {{task.time}}
+                          td
+                            button.clear(@click="removeEl(task)") clear
 </template>
 
 <script lang="ts">
@@ -42,7 +42,10 @@ export default class Tasks extends Vue {
 
   // An array with tasks
   arr: TasksInterface[] = [
-    addTasks('practice', 'running', '10:00'),
+    addTasks('practice', 'studing', '10:00'),
+    addTasks('chilling', 'walk in the park', '12:00'),
+    addTasks('sleep', 'go to bad', '22:00'),
+    addTasks('practice', 'studing', '10:00'),
     addTasks('chilling', 'walk in the park', '12:00'),
     addTasks('sleep', 'go to bad', '22:00'),
   ]
@@ -57,11 +60,19 @@ export default class Tasks extends Vue {
 
   index: number = 0
 
+  // Animates list with tasks when layout is available
   mounted() {
     for (let i = 0; i < this.arr.length; i += 1) {
       setTimeout(() => {
         this.$refs.elements[i].classList.add('change-font-size');
       }, 1000 * i);
+    }
+  }
+
+  // Removes class with animation when it's done
+  beforeUpdate() {
+    for (let j = 0; j <= this.arr.length; j += 1) {
+      this.$refs.elements[j].classList.remove('change-font-size');
     }
   }
 

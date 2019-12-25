@@ -122,6 +122,9 @@ body {
   .header-nav ul li:hover {
     border-bottom: 2px solid #FFC200;
   }
+  section {
+      overflow: auto;
+  }
 }
 
 @media only screen and (min-width: 870px) {
@@ -204,6 +207,7 @@ main {
     flex-direction: column;
     height: 100vh;
     flex-grow: 1;
+    overflow: hidden;
 
     // content section
     section {
@@ -211,6 +215,7 @@ main {
         flex: 0 1 100%;
         flex-direction: row;
         box-sizing: border-box;
+        height: 100vh;
         .notifications-block {
             margin: 30px auto 100px auto;
             width: 70%;
@@ -352,7 +357,6 @@ main {
     }
 }
     table {
-        // border: 1px solid black;
         padding: 30px;
         width: 80%;
         margin: 0 auto;
@@ -385,6 +389,8 @@ main {
     .tableDesk {
         tr {
             border-bottom: 1px solid #f0efef;
+            // display: inline-block;
+            // border-radius: 50px !important;
         }
         }
     table, th, td {
@@ -394,20 +400,11 @@ main {
         animation-name: animationForList;
         animation-duration: 1s;
     }
-        .list-enter-active {
-            animation-name: animationForNewTask;
-            animation-duration: 2s;
-            animation-iteration-count: infinite;
-        }
-        .wordList-enter-active, .wordList-leave-active {
-            transition: all .2s;
-        }
-        .wordList-enter, .wordList-leave-to{
-        opacity: 0;
-        }
-        .wordList-enter-active {
-        transition-delay: .2s;
-        }
+    .list-enter-active {
+        animation-name: animationForNewTask;
+        animation-duration: 2s;
+        animation-iteration-count: infinite;
+    }
 
     tr {
         text-align: center;
