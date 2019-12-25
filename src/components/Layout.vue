@@ -42,6 +42,7 @@ export default class Layout extends Vue {
 
 html, body {
     height: 100%;
+    min-height: 100% !important;
 }
 
 body {
@@ -351,19 +352,65 @@ main {
     }
 }
     table {
+        // border: 1px solid black;
         padding: 30px;
         width: 80%;
         margin: 0 auto;
     }
+    @keyframes animationForNewTask {
+        0% {
+            background-color: white;
+        }
+        25% {
+            background-color: #EEEEEE;
+        }
+        50% {
+            background-color: white;
+        }
+        75% {
+            background-color: #EEEEEE;
+        }
+        100% {
+            background-color: white;
+        }
+    }
+    @keyframes animationForList {
+        50% {
+            font-size: 18px;
+        }
+        100% {
+            font-size: 16px;
+        }
+    }
+    .tableDesk {
+        tr {
+            border-bottom: 1px solid #f0efef;
+        }
+        }
     table, th, td {
         border-collapse: collapse;
     }
+    .change-font-size {
+        animation-name: animationForList;
+        animation-duration: 1s;
+    }
+        .list-enter-active {
+            animation-name: animationForNewTask;
+            animation-duration: 2s;
+            animation-iteration-count: infinite;
+        }
+        .wordList-enter-active, .wordList-leave-active {
+            transition: all .2s;
+        }
+        .wordList-enter, .wordList-leave-to{
+        opacity: 0;
+        }
+        .wordList-enter-active {
+        transition-delay: .2s;
+        }
 
     tr {
         text-align: center;
-    }
-    th {
-        padding-bottom: 15px;
     }
     td {
         padding: 15px;

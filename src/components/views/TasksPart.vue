@@ -15,19 +15,16 @@
             .notifications-block
                 .wraper-task
                   table.tableDesk
-                    thead
-                        tr
-                            //- Main titles on the top
-                            th(v-for="description in titlesTop"
-                            v-bind:key="description") {{description}}
                     tbody
-                        //- Prints tasks
-                        tr(v-for="task in arr" v-bind:key="task")
-                            td {{task.title}}
-                            td {{task.description}}
-                            td {{task.time}}
-                            td
-                              button.clear(@click="removeEl(task)") clear
+                      transition-group.wrapper-table(name="list" tag="div")
+                          th(v-for="description in titlesTop"
+                          v-bind:key="description") {{description}}
+                          tr(v-for="(task) in arr" v-bind:key="task" ref='elements')
+                              td {{task.title}}
+                              td {{task.description}}
+                              td {{task.time}}
+                              td
+                                button.clear(@click="removeEl(task)") clear
 </template>
 
 <script lang="ts">
@@ -36,12 +33,19 @@ import { TasksInterface } from '@/Interfaces';
 
 const space = ' ';
 
+function addTasks(title: string, description: any, time: string): TasksInterface {
+  return { title, description, time };
+}
 @Component({})
 export default class Tasks extends Vue {
   titlesTop: string[] = ['Title', 'Description', 'Time']
 
   // An array with tasks
-  arr: TasksInterface[] = []
+  arr: TasksInterface[] = [
+    addTasks('practice', 'running', '10:00'),
+    addTasks('chilling', 'walk in the park', '12:00'),
+    addTasks('sleep', 'go to bad', '22:00'),
+  ]
 
   // Input for title
   addTitle: string = ''
@@ -51,15 +55,25 @@ export default class Tasks extends Vue {
 
   currTimeAndDate: string = ''
 
+  index: number = 0
+
+  mounted() {
+    for (let i = 0; i < this.arr.length; i += 1) {
+      setTimeout(() => {
+        this.$refs.elements[i].classList.add('change-font-size');
+      }, 1000 * i);
+    }
+  }
+
   // Gets current time and date
-  getTimeAndDate() {
+  getTimeAndDate(): void {
     const time = new Date();
     const date: string = `${time.getDate()}.${time.getMonth() + 1}.${time.getFullYear()}`;
     this.currTimeAndDate = `${time.getHours()}:${time.getMinutes()} ${date}`;
   }
 
   // Adds new task into array
-  addTodo() {
+  addTodo(): void {
     if (this.addTitle === '' || this.addDescription === '') {
       alert('The field is empty. Please type a title and description');
     } else {
@@ -76,7 +90,7 @@ export default class Tasks extends Vue {
   }
 
   // Remove task with appropriate data from array
-  removeEl(taskEl: TasksInterface) {
+  removeEl(taskEl: TasksInterface): void {
     const index = this.arr.indexOf(taskEl);
     this.arr.splice(index, 1);
   }

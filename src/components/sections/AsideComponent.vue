@@ -230,6 +230,6 @@ aside .nav-block ul .notifications-number {
   font-size: 13px;
   color: #131313;
   border-radius: 100%;
-  padding: 2px 6px 2px 6px;
+  padding: 1px 6px 1px 6px;
 }
 </style>
