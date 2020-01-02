@@ -403,7 +403,7 @@ main {
     .list-enter-active {
         animation-name: animationForNewTask;
         animation-duration: 2s;
-        animation-iteration-count: infinite;
+        animation-iteration-count: 1;
     }
 
     tr {

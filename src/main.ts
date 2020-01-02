@@ -16,6 +16,7 @@ const routes = [
   { path: '/calendar', component: CalendarPart },
   { path: '/files', component: FilesPart },
   { path: '/kanban', component: KanbanPart },
+  { path: '/', redirect: '/tasks' },
 ];
 
 const router = new VueRouter({

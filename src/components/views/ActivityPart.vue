@@ -47,10 +47,12 @@ export default class Activity extends Vue {
 
     currentPicture: number = 3
 
+    domPicture: any = this.$refs
+
     // Gets class name from refs. Then compares them and give the index from the picture.
     getIndex(event: any): void {
-      for (let i = 0; i < this.$refs.picElements.children.length; i += 1) {
-        if (this.$refs.picElements.childNodes[i].className === event.target.className) {
+      for (let i = 0; i < this.domPicture.picElements.children.length; i += 1) {
+        if (this.domPicture.picElements.childNodes[i].className === event.target.className) {
           this.currentPicture = i;
           // Send an index from picture to parent component
           this.$emit('showIndex', this.currentPicture);

@@ -2,7 +2,7 @@
 <template lang="pug">
   #app
     Layout
-    router-link(to="/tasks")
+    //- router-link(to="/tasks")
 </template>
 
 <script lang="ts">
