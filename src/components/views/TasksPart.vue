@@ -20,28 +20,36 @@
                       :key="list") {{list}}
                     tbody(ref='elements')
                       tr(v-for="(task, index) in arr" :key="index")
-                          td {{task.title}}
-                          td {{task.description}}
-                          td {{task.time}}
-                          td
-                            button.clear(@click="removeTask(task)") delete
+                        td {{task.status}}
+                        td {{task.title}}
+                        td {{task.description}}
+                        td {{task.time}}
+                        td
+                          button.clear(@click="removeTask(task)") delete
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import { TasksInterface } from '@/Interfaces';
+import { TasksInterface, Status } from '@/Interfaces';
 
 @Component({})
 export default class Tasks extends Vue {
-  titlesTop: string[] = ['Title', 'Description', 'Time']
+  titlesTop: string[] = ['Status', 'Title', 'Description', 'Time']
 
   // An array with tasks
-  arr: TasksInterface[] = [
-    { title: 'practice', description: 'studing', time: '10:00' },
-    { title: 'chilling', description: 'walk in the park', time: '12:00' },
-    { title: 'sleep', description: 'go to bad', time: '22:00' },
-    { title: 'practice', description: 'studing', time: '10:00' },
-  ]
+  arr: TasksInterface[] = []
+
+  // An object with json data
+  jsonArr: any = ''
+
+  // An object in local storage
+  storeArr: any = ''
+
+  // An object with json data
+  localStore: any = ''
+
+  // Status of task
+  addStatus: string = ''
 
   // Input for title
   addTitle: string = ''
@@ -51,14 +59,39 @@ export default class Tasks extends Vue {
 
   currTimeAndDate: string = ''
 
+  // DOM elements
   domEl: any = this.$refs
 
-  runBeforeUpdate: boolean = true
+  runBeforeUpdate: boolean = false
 
   runAnimationNewTask: boolean = false
 
   // Animates list with tasks when layout is available
   mounted() {
+    this.initialAddingArray();
+    this.addsClassForAnimation();
+    this.runBeforeUpdate = true;
+  }
+
+  updated() {
+    this.removeClassAnimation();
+    if (this.runAnimationNewTask) {
+      this.animationNewTask();
+    }
+    this.jsonArr = JSON.stringify(this.arr);
+    this.storeArr = sessionStorage.setItem('arr', this.jsonArr);
+  }
+
+  // Removes class with animation when it's done
+  removeClassAnimation(): void {
+    for (let j = 0; j < this.arr.length; j += 1) {
+      this.domEl.elements.rows[j].classList.remove('change-font-size');
+    }
+    this.runBeforeUpdate = false;
+  }
+
+  // Animate list when page is load
+  addsClassForAnimation(): void {
     for (let i = 0; i < this.arr.length; i += 1) {
       setTimeout(() => {
         this.domEl.elements.rows[i].classList.add('change-font-size');
@@ -66,20 +99,31 @@ export default class Tasks extends Vue {
     }
   }
 
-  // Anomates new task added
-  updated() {
-    if (this.runAnimationNewTask) {
-      this.animationNewTask();
-    }
-  }
-
-  // Removes class with animation when it's done
-  beforeUpdate() {
-    if (this.runBeforeUpdate) {
-      for (let j = 0; j < this.arr.length; j += 1) {
-        this.domEl.elements.rows[j].classList.remove('change-font-size');
+  // Adds lists with tasks if an array is empty
+  initialAddingArray(): void {
+    if (sessionStorage.getItem('arr') === null) {
+      this.arr = [
+        {
+          status: Status.todo, title: 'practice', description: 'studing', time: '10:00',
+        },
+        {
+          status: Status.inProgress, title: 'chilling', description: 'walk in the park', time: '12:00',
+        },
+        {
+          status: Status.done, title: 'sleep', description: 'go to bad', time: '22:00',
+        },
+        {
+          status: Status.done, title: 'practice', description: 'studing', time: '10:00',
+        },
+      ];
+      this.jsonArr = JSON.stringify(this.arr);
+      this.storeArr = sessionStorage.setItem('arr', this.jsonArr);
+    } else {
+      this.localStore = sessionStorage.getItem('arr');
+      this.storeArr = JSON.parse(this.localStore);
+      for (let i = 0; i < this.storeArr.length; i += 1) {
+        this.arr.push(this.storeArr[i]);
       }
-      this.runBeforeUpdate = false;
     }
   }
 
@@ -90,6 +134,7 @@ export default class Tasks extends Vue {
     this.currTimeAndDate = `${time.getHours()}:${time.getMinutes()} ${date}`;
   }
 
+  // Animates new added task to the list
   animationNewTask(): void {
     if (this.arr.length >= 1) {
       this.domEl.elements.rows[0].classList.add('list-enter-active');
@@ -102,6 +147,7 @@ export default class Tasks extends Vue {
 
   addNewTask(): TasksInterface {
     const obj = {
+      status: Status.todo,
       title: this.addTitle,
       description: this.addDescription,
       time: this.currTimeAndDate,

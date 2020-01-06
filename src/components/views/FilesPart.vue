@@ -7,6 +7,7 @@ main
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
+
 @Component({})
 export default class Files extends Vue {
     title: string = 'Comming soon..'
