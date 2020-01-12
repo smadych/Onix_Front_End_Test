@@ -17,22 +17,16 @@
                 .chat
                     span.chat-btn Chat
         .header-nav
-            ul
-                li
-                    //- Refers to Tasks component
-                    router-link(to="/tasks") Tasks
-                li
-                    //- Refers to Kanban component
-                    router-link(to="/kanban") Kanban
-                li
-                    //- Refers to Activity component
-                    router-link(to="/activity") Activity
-                li
-                    //- Refers to Calendar component
-                    router-link(to="/calendar") Calendar
-                li
-                    //- Refers to Files component
-                    router-link(to="/files") Files
+            //- Refers to Tasks component
+            router-link(to="/tasks") Tasks
+            //- Refers to Kanban component
+            router-link(to="/kanban") Kanban
+            //- Refers to Activity component
+            router-link(to="/activity") Activity
+            //- Refers to Calendar component
+            router-link(to="/calendar") Calendar
+            //- Refers to Files component
+            router-link(to="/files") Files
 </template>
 
 <script lang="ts">
@@ -138,23 +132,19 @@ export default Vue.extend({
             opacity: 0.7;
             font-size: 16px;
             font-weight: 200;
-            ul {
-                margin-left: 30px;
-                display: inline-flex;
-                list-style: none;
-                li {
-                    margin-right: 25px;
+            padding-bottom: 12px;
+                a {
+                    text-decoration: none;
+                    color: #5A5A5A;
+                    margin-left: 30px;
                     padding-bottom: 12px;
-                    border-bottom: 2px solid transparent;
-                    a {
-                        text-decoration: none;
-                        color: #5A5A5A;
-                    }
                 }
-                li:hover {
+                a:hover {
                     border-bottom: 2px solid #FFC200;
                 }
-            }
+                a:focus {
+                    border-bottom: 2px solid #FFC200;
+                }
         }
     }
 </style>

@@ -389,10 +389,8 @@ main {
     .tableDesk {
         tr {
             border-bottom: 1px solid #f0efef;
-            // display: inline-block;
-            // border-radius: 50px !important;
         }
-        }
+    }
     table, th, td {
         border-collapse: collapse;
     }

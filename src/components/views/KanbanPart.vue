@@ -31,4 +31,10 @@ export default class Kanban extends Vue {
     .status {
         display: flex;
     }
+    tr {
+        border: none !important;
+    }
+    td {
+        border-bottom: 1px solid #f0efef;
+    }
 </style>
