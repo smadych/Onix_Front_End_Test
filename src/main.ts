@@ -19,6 +19,9 @@ const routes = [
   { path: '/', redirect: '/tasks' },
 ];
 
+const eventBus = new Vue();
+export default eventBus;
+
 const router = new VueRouter({
   routes,
 });

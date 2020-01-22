@@ -34,6 +34,7 @@
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator';
+import eventBus from '@/main';
 
 @Component({
   // Take index of picture from Activity component

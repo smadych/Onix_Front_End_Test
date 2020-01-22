@@ -1,16 +1,9 @@
 <!-- Tasks component which include table with title, description and time -->
 <template lang="pug">
     main
-        .newTask
-          //- Form for adding tasks
-          form(@submit.prevent="addTodo")
-            h5 Add new task
-            .input-wrapper
-              input.titleInput(type="text" name="title"
-              placeholder="Enter the title" v-model="addTitle")
-              input.descriptionInput(type="text" name="description"
-              placeholder="Enter a description" v-model="addDescription")
-            button.add Add
+        button.add-task(@click='showM') Add task
+        ModuleAddTask(v-if='showModal' @close='closeModule'
+        v-on:sendTask='(...args)=>this.sendTask(...args)')
         section
             .notifications-block
                 .wraper-task
@@ -31,8 +24,13 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import { TasksInterface, Status } from '@/Interfaces';
+import ModuleAddTask from './ModuleAddTask.vue';
 
-@Component({})
+@Component({
+  components: {
+    ModuleAddTask,
+  },
+})
 export default class Tasks extends Vue {
   titlesTop: string[] = ['Status', 'Title', 'Description', 'Time']
 
@@ -66,7 +64,8 @@ export default class Tasks extends Vue {
 
   runAnimationNewTask: boolean = false
 
-  // Animates list with tasks when layout is available
+  showModal: boolean = false
+
   mounted() {
     this.initialAddingArray();
     this.addsClassForAnimation();
@@ -157,16 +156,12 @@ export default class Tasks extends Vue {
 
   // Adds new task into array
   addTodo(): void {
-    if (this.addTitle === '' || this.addDescription === '') {
-      alert('The field is empty. Please type a title and description');
-    } else {
-      this.getTimeAndDate();
-      const task = this.addNewTask();
-      this.addTitle = '';
-      this.addDescription = '';
-      this.arr.splice(0, 0, task);
-      this.runAnimationNewTask = true;
-    }
+    this.getTimeAndDate();
+    const task = this.addNewTask();
+    this.addTitle = '';
+    this.addDescription = '';
+    this.arr.splice(0, 0, task);
+    this.runAnimationNewTask = true;
   }
 
   // Remove task with appropriate data from array
@@ -174,5 +169,64 @@ export default class Tasks extends Vue {
     const indexEl: number = this.arr.indexOf(taskEl);
     this.arr.splice(indexEl, 1);
   }
+
+  showM() {
+    if (!this.showModal) {
+      this.showModal = true;
+    }
+  }
+
+  closeModule() {
+    this.showModal = false;
+  }
+
+  sendTask(title: any, description: any) {
+    this.addTitle = title;
+    this.addDescription = description;
+    this.closeModule();
+    this.addTodo();
+  }
 }
 </script>
+
+<style lang="scss">
+.newTask {
+    border: 2px solid #EAEAEA;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    display: flex;
+    flex-direction: column;
+    padding: 0 20px;
+    margin: 5px auto;
+    form {
+        display: flex;
+        flex-direction: column;
+        .input-wrapper {
+            .titleInput {
+                margin-right: 10px;
+            }
+        }
+    }
+    h5 {
+        margin: 10px auto;
+        text-transform: uppercase;
+    }
+    input {
+        margin: 0 auto;
+        font-size: 20px;
+        outline: none;
+        border-radius: 5px;
+    }
+    .titleInput {
+        margin-bottom: 5px;
+    }
+    .descriptionInput {
+        margin-bottom: 15px;
+    }
+}
+    table {
+        padding: 30px;
+        width: 80%;
+        margin: 0 auto;
+    }
+</style>

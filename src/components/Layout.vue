@@ -330,31 +330,6 @@ main {
     flex-direction: column;
     padding: 0 20px;
     margin: 5px auto;
-    form {
-        display: flex;
-        flex-direction: column;
-        .input-wrapper {
-            .titleInput {
-                margin-right: 10px;
-            }
-        }
-    }
-    h5 {
-        margin: 10px auto;
-        text-transform: uppercase;
-    }
-    input {
-        margin: 0 auto;
-        font-size: 20px;
-        outline: none;
-        border-radius: 5px;
-    }
-    .titleInput {
-        margin-bottom: 5px;
-    }
-    .descriptionInput {
-        margin-bottom: 15px;
-    }
 }
     table {
         padding: 30px;
@@ -410,7 +385,7 @@ main {
     td {
         padding: 15px;
     }
-    .clear, .add {
+    .clear, .add-task {
         width: 80px;
         font-size: 14px;
         background: #EAEAEA;
@@ -419,6 +394,10 @@ main {
         margin: 0 auto;
         margin-bottom: 10px;
         outline: none;
+    }
+    .add-task {
+        margin-top: 5px;
+        min-width: 120px;
     }
 }
 </style>
