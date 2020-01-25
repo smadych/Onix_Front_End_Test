@@ -19,7 +19,7 @@ transition(name='modal-fade')
 import { Component, Vue } from 'vue-property-decorator';
 
 @Component({})
-export default class ModuleAddTask extends Vue {
+export default class ModalAddTask extends Vue {
   addTitle: string = ''
 
   addDescription: any = ''

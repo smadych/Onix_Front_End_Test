@@ -2,8 +2,9 @@
 <template lang="pug">
     main
         button.add-task(@click='showM') Add task
-        ModuleAddTask(v-if='showModal' @close='closeModule'
+        ModalAddTask(v-if='showModal' @close='close'
         v-on:sendTask='(...args)=>this.sendTask(...args)')
+        ModalEdit(v-if='showModalEdit' @close='close' :indexOfTask='indexTask')
         section
             .notifications-block
                 .wraper-task
@@ -12,11 +13,11 @@
                       th(v-for="list in titlesTop"
                       :key="list") {{list}}
                     tbody(ref='elements')
-                      tr(v-for="(task, index) in arr" :key="index")
-                        td {{task.status}}
-                        td {{task.title}}
-                        td {{task.description}}
-                        td {{task.time}}
+                      tr.task-area(v-for="(task, index) in arr" :key="index")
+                        td(@click='showModalEditFunc(indexTask=index)') {{task.status}}
+                        td(@click='showModalEditFunc(indexTask=index)') {{task.title}}
+                        td(@click='showModalEditFunc(indexTask=index)') {{task.description}}
+                        td(@click='showModalEditFunc(indexTask=index)') {{task.time}}
                         td
                           button.clear(@click="removeTask(task)") delete
 </template>
@@ -24,11 +25,13 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import { TasksInterface, Status } from '@/Interfaces';
-import ModuleAddTask from './ModuleAddTask.vue';
+import ModalAddTask from './ModalAddTask.vue';
+import ModalEdit from './ModalEdit.vue';
 
 @Component({
   components: {
-    ModuleAddTask,
+    ModalAddTask,
+    ModalEdit,
   },
 })
 export default class Tasks extends Vue {
@@ -66,6 +69,10 @@ export default class Tasks extends Vue {
 
   showModal: boolean = false
 
+  showModalEdit: boolean = false;
+
+  indexTask: number = 0
+
   mounted() {
     this.initialAddingArray();
     this.addsClassForAnimation();
@@ -78,7 +85,7 @@ export default class Tasks extends Vue {
       this.animationNewTask();
     }
     this.jsonArr = JSON.stringify(this.arr);
-    this.storeArr = sessionStorage.setItem('arr', this.jsonArr);
+    sessionStorage.setItem('arr', this.jsonArr);
   }
 
   // Removes class with animation when it's done
@@ -176,14 +183,21 @@ export default class Tasks extends Vue {
     }
   }
 
-  closeModule() {
+  showModalEditFunc(index: number) {
+    if (!this.showModalEdit) {
+      this.showModalEdit = true;
+    }
+  }
+
+  close() {
     this.showModal = false;
+    this.showModalEdit = false;
   }
 
   sendTask(title: any, description: any) {
     this.addTitle = title;
     this.addDescription = description;
-    this.closeModule();
+    this.close();
     this.addTodo();
   }
 }

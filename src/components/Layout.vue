@@ -362,8 +362,11 @@ main {
         }
     }
     .tableDesk {
-        tr {
+        .task-area {
             border-bottom: 1px solid #f0efef;
+        }
+        .task-area:hover {
+            background-color: #f0efef;
         }
     }
     table, th, td {
