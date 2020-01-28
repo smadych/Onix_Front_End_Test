@@ -84,6 +84,10 @@ export default class Tasks extends Vue {
     if (this.runAnimationNewTask) {
       this.animationNewTask();
     }
+    this.addDataToStorage();
+  }
+
+  addDataToStorage() {
     this.jsonArr = JSON.stringify(this.arr);
     sessionStorage.setItem('arr', this.jsonArr);
   }
@@ -122,8 +126,7 @@ export default class Tasks extends Vue {
           status: Status.done, title: 'practice', description: 'studing', time: '10:00',
         },
       ];
-      this.jsonArr = JSON.stringify(this.arr);
-      this.storeArr = sessionStorage.setItem('arr', this.jsonArr);
+      this.addDataToStorage();
     } else {
       this.localStore = sessionStorage.getItem('arr');
       this.storeArr = JSON.parse(this.localStore);
@@ -184,12 +187,15 @@ export default class Tasks extends Vue {
   }
 
   showModalEditFunc(index: number) {
+    this.addDataToStorage();
     if (!this.showModalEdit) {
       this.showModalEdit = true;
     }
   }
 
   close() {
+    this.arr = [];
+    this.initialAddingArray();
     this.showModal = false;
     this.showModalEdit = false;
   }

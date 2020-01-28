@@ -6,15 +6,19 @@ main
      .wrapper
       .todo
         h3 {{status.todo}}
-        draggable(:list="todoArr" class="list-group" draggable=".item"
+        draggable(:list="todoArr" id='todo' class="list-group" draggable=".item"
+        :move='checkMove'
         group="a"
         @change="log"
         )
-          div.item(v-for='(statusL, index) in todoArr' @click='showModalEditFunc(statusL)'
+          .item(v-for='(statusL, index) in todoArr'
+          @click='showModalEditFunc(statusL)'
           ) {{statusL.title}} - {{statusL.time}}
       .in-progress
         h3 {{status.inProgress}}
-        draggable(:list="inProgressArr" class="list-group" draggable=".item" group="a"
+        draggable(:list="inProgressArr" id='in-progress' class="list-group"
+        draggable=".item" group="a"
+        :move='checkMove'
         @change="log"
         )
           .item(v-for='(statusL, index) in inProgressArr'
@@ -22,11 +26,11 @@ main
           ) {{statusL.title}} - {{statusL.time}}
       .done
         h3 {{status.done}}
-        draggable(:list="doneArr" class="list-group" draggable=".item" group="a"
-        @click='showModalEditFunc(statusL)'
-        @change="log"
+        draggable(:list="doneArr" id='done' class="list-group" draggable=".item" group="a"
+        :move='checkMove' @change="log"
         )
           .item(v-for='(statusL, index) in doneArr'
+          @click='showModalEditFunc(statusL)'
           ) {{statusL.title}} - {{statusL.time}}
 </template>
 
@@ -45,10 +49,10 @@ import ModalEdit from './ModalEdit.vue';
 export default class Kanban extends Vue {
     status: any = Status
 
-    localStore: any = sessionStorage.getItem('arr')
+    localStore: any = []
 
     // An array from local storage
-    storeArr: any = JSON.parse(this.localStore)
+    storeArr: any = []
 
     showModalEdit: boolean = false
 
@@ -68,19 +72,29 @@ export default class Kanban extends Vue {
 
     doneArrLength: number = 0
 
+    currentEl: string = ''
+
     created() {
+      this.getDataFromStorage();
       this.getTasks();
       this.getLengthOfArrays();
     }
 
     updated() {
       this.getCurrentColumn();
-      this.todoArrLength = this.todoArr.length;
-      this.inProgressArrLength = this.inProgressArr.length;
-      this.doneArrLength = this.doneArr.length;
+      this.getLengthOfArrays();
     }
 
     beforeDestroy() {
+      this.addDataToStorage();
+    }
+
+    getDataFromStorage() {
+      this.localStore = sessionStorage.getItem('arr');
+      this.storeArr = JSON.parse(this.localStore);
+    }
+
+    addDataToStorage() {
       this.storeArr = JSON.stringify(this.storeArr);
       sessionStorage.setItem('arr', this.storeArr);
     }
@@ -114,13 +128,17 @@ export default class Kanban extends Vue {
     }
 
     close() {
+      this.clearArrays();
+      this.getDataFromStorage();
+      this.getTasks();
+      this.getLengthOfArrays();
+    }
+
+    clearArrays() {
       this.showModalEdit = false;
-      this.localStore = sessionStorage.getItem('arr');
-      this.storeArr = JSON.parse(this.localStore);
-      this.getCurrentColumn();
-      this.todoArrLength = this.todoArr.length;
-      this.inProgressArrLength = this.inProgressArr.length;
-      this.doneArrLength = this.doneArr.length;
+      this.todoArr = [];
+      this.inProgressArr = [];
+      this.doneArr = [];
     }
 
     showModalEditFunc(statusL: object) {
@@ -129,8 +147,7 @@ export default class Kanban extends Vue {
           this.indexTask = i;
         }
       }
-      this.storeArr = JSON.stringify(this.storeArr);
-      sessionStorage.setItem('arr', this.storeArr);
+      this.addDataToStorage();
       if (!this.showModalEdit) {
         this.showModalEdit = true;
       }
@@ -138,10 +155,18 @@ export default class Kanban extends Vue {
 
     log(evt: any) {
       for (let i = 0; i < this.storeArr.length; i += 1) {
-        if (this.storeArr[i] === evt.added.element) {
+        if (this.storeArr[i] === this.currentEl) {
           this.storeArr[i].status = this.currentColumn;
         }
       }
+    }
+
+    checkMove(event: any) {
+      this.currentEl = event.draggedContext.element;
+      if (event.from.id === 'done' && event.to.id === 'todo') {
+        return false;
+      }
+      return true;
     }
 }
 </script>
