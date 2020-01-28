@@ -243,4 +243,7 @@ export default class Tasks extends Vue {
         width: 80%;
         margin: 0 auto;
     }
+    .task-area {
+      border-radius: 5px;
+    }
 </style>

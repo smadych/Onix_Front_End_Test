@@ -1,6 +1,6 @@
 <template lang="pug">
 transition(name='modal-fade')
-    .modal-backdrop
+    .modal-backdrop()
         .modal
             h3 Edit task
             .wrapper()
@@ -32,9 +32,9 @@ transition(name='modal-fade')
                         ) {{storage[indexOfTask].time}}
             .btn-wrapper
                 button.save(v-if='saveButton' @click='saveChanges') save
-                button.add(type="button" @click="changeMode"
+                button.edit(type="button" @click="changeMode"
                 v-if="buttonMode === 'edit'") {{buttonMode}}
-                button.add(v-else-if="buttonMode === 'cencel'"
+                button.edit(v-else-if="buttonMode === 'cencel'"
                 type="button" @click="close") cencel
 </template>
 
@@ -111,7 +111,6 @@ export default class ModalEdit extends Vue {
 
   .modal {
     width: 300px;
-    // height: 400px;
     border-radius: 10px;
     background: #FFFFFF;
     box-shadow: 2px 2px 20px 1px;
@@ -146,6 +145,7 @@ export default class ModalEdit extends Vue {
         textarea {
             width: 100%;
             min-height: 50px;
+            font-size: 14px;
         }
     }
     .btn-wrapper {
@@ -153,12 +153,6 @@ export default class ModalEdit extends Vue {
         margin-bottom: 20px;
         display: flex;
         flex-flow: wrap;
-        button {
-            margin: 0 auto;
-            width: 60px;
-            height: 30px;
-            font-size: 12px;
-        }
     }
   }
 </style>

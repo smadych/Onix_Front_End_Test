@@ -388,7 +388,7 @@ main {
     td {
         padding: 15px;
     }
-    .clear, .add-task {
+    .clear, .add-task, .edit, .save, .cencel, .add {
         width: 80px;
         font-size: 14px;
         background: #EAEAEA;
@@ -397,6 +397,7 @@ main {
         margin: 0 auto;
         margin-bottom: 10px;
         outline: none;
+        cursor: pointer;
     }
     .add-task {
         margin-top: 5px;

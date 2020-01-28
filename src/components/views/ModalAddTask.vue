@@ -1,6 +1,6 @@
 <template lang="pug">
 transition(name='modal-fade')
-  .modal-backdrop
+  .modal-backdrop()
     .modal
       form(@submit.prevent="addTodo")
             h5 Add new task
@@ -103,15 +103,5 @@ export default class ModalAddTask extends Vue {
     .btn-wrapper {
       display: flex;
       justify-content: center;
-      .cencel, .add {
-          width: 80px;
-          font-size: 14px;
-          background: #EAEAEA;
-          padding: 8px 15px 8px 15px;
-          border-radius: 15px;
-          margin: 0 auto;
-          margin-bottom: 10px;
-          outline: none;
-      }
     }
 </style>
