@@ -14,7 +14,8 @@
                       :key="list") {{list}}
                     tbody(ref='elements')
                       tr.task-area(v-for="(task, index) in arr" :key="index")
-                        td(@click='showModalEditFunc(indexTask=index)') {{task.status}}
+                        td(@click='showModalEditFunc(indexTask=index)'
+                        :id='text') {{task.status}}
                         td(@click='showModalEditFunc(indexTask=index)') {{task.title}}
                         td(@click='showModalEditFunc(indexTask=index)') {{task.description}}
                         td(@click='showModalEditFunc(indexTask=index)') {{task.time}}
@@ -25,8 +26,8 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import { TasksInterface, Status } from '@/Interfaces';
-import ModalAddTask from './ModalAddTask.vue';
-import ModalEdit from './ModalEdit.vue';
+import ModalAddTask from '../modal/ModalAddTask.vue';
+import ModalEdit from '../modal/ModalEdit.vue';
 
 @Component({
   components: {
@@ -58,7 +59,9 @@ export default class Tasks extends Vue {
   // Input for description
   addDescription: any = ''
 
-  currTimeAndDate: string = ''
+  currDate: string = ''
+
+  time: Date = new Date();
 
   // DOM elements
   domEl: any = this.$refs
@@ -72,6 +75,8 @@ export default class Tasks extends Vue {
   showModalEdit: boolean = false;
 
   indexTask: number = 0
+
+  text: string = 'hello'
 
   mounted() {
     this.initialAddingArray();
@@ -87,7 +92,7 @@ export default class Tasks extends Vue {
     this.addDataToStorage();
   }
 
-  addDataToStorage() {
+  addDataToStorage(): void {
     this.jsonArr = JSON.stringify(this.arr);
     sessionStorage.setItem('arr', this.jsonArr);
   }
@@ -114,16 +119,16 @@ export default class Tasks extends Vue {
     if (sessionStorage.getItem('arr') === null) {
       this.arr = [
         {
-          status: Status.todo, title: 'practice', description: 'studing', time: '10:00',
+          status: Status.todo, title: 'practice', description: 'studing', time: this.getDate(),
         },
         {
-          status: Status.inProgress, title: 'chilling', description: 'walk in the park', time: '12:00',
+          status: Status.inProgress, title: 'chilling', description: 'walk in the park', time: this.getDate(),
         },
         {
-          status: Status.done, title: 'sleep', description: 'go to bad', time: '22:00',
+          status: Status.done, title: 'sleep', description: 'go to bad', time: this.getDate(),
         },
         {
-          status: Status.done, title: 'practice', description: 'studing', time: '10:00',
+          status: Status.done, title: 'practice', description: 'studing', time: this.getDate(),
         },
       ];
       this.addDataToStorage();
@@ -137,10 +142,11 @@ export default class Tasks extends Vue {
   }
 
   // Gets current time and date
-  getTimeAndDate(): void {
-    const time: any = new Date();
-    const date: string = `${time.getDate()}.${time.getMonth() + 1}.${time.getFullYear()}`;
-    this.currTimeAndDate = `${time.getHours()}:${time.getMinutes()} ${date}`;
+  getDate(): string {
+    const currDate = new Date();
+    currDate.setDate(currDate.getDate() + Math.floor(Math.random() * Math.floor(5)));
+    this.currDate = `${currDate.getDate()}.${currDate.getMonth() + 1}.${currDate.getFullYear()}`;
+    return this.currDate;
   }
 
   // Animates new added task to the list
@@ -159,14 +165,14 @@ export default class Tasks extends Vue {
       status: Status.todo,
       title: this.addTitle,
       description: this.addDescription,
-      time: this.currTimeAndDate,
+      time: this.getDate(),
     };
     return obj;
   }
 
   // Adds new task into array
   addTodo(): void {
-    this.getTimeAndDate();
+    // this.getDate();
     const task = this.addNewTask();
     this.addTitle = '';
     this.addDescription = '';
@@ -180,27 +186,27 @@ export default class Tasks extends Vue {
     this.arr.splice(indexEl, 1);
   }
 
-  showM() {
+  showM(): void {
     if (!this.showModal) {
       this.showModal = true;
     }
   }
 
-  showModalEditFunc(index: number) {
+  showModalEditFunc(index: number): void {
     this.addDataToStorage();
     if (!this.showModalEdit) {
       this.showModalEdit = true;
     }
   }
 
-  close() {
+  close(): void {
     this.arr = [];
     this.initialAddingArray();
     this.showModal = false;
     this.showModalEdit = false;
   }
 
-  sendTask(title: any, description: any) {
+  sendTask(title: any, description: any): void {
     this.addTitle = title;
     this.addDescription = description;
     this.close();

@@ -11,9 +11,6 @@ transition(name='modal-fade')
                     .description
                         h5 Description
                         p {{storage[indexOfTask].description}}
-                    .time
-                        h5 Time
-                        p {{storage[indexOfTask].time}}
                 .editMode(v-else='editMode')
                     .title
                         h5 Title
@@ -25,11 +22,6 @@ transition(name='modal-fade')
                         textarea(v-model='storage[indexOfTask].description'
                         v-on='checkTyping(storage[indexOfTask].description)'
                         ) {{storage[indexOfTask].description}}
-                    .time
-                        h5 Time
-                        textarea(v-model='storage[indexOfTask].time'
-                        v-on='checkTyping(storage[indexOfTask].time)'
-                        ) {{storage[indexOfTask].time}}
             .btn-wrapper
                 button.save(v-if='saveButton' @click='saveChanges') save
                 button.edit(type="button" @click="changeMode"
@@ -62,28 +54,24 @@ export default class ModalEdit extends Vue {
 
   description: string = ''
 
-  time: string = ''
-
   saveButton: boolean = false
 
-  close() {
+  close(): void {
     this.$emit('close');
   }
 
-  changeMode() {
+  changeMode(): void {
     if (this.buttonMode === 'edit') {
       this.editMode = true;
       this.title = this.storage[this.$props.indexOfTask].title;
       this.description = this.storage[this.$props.indexOfTask].description;
-      this.time = this.storage[this.$props.indexOfTask].time;
       this.buttonMode = 'cencel';
     }
   }
 
-  checkTyping(textareaData: any) {
+  checkTyping(textareaData: any): void {
     if (!(this.title === this.storage[this.$props.indexOfTask].title)
-    || !(this.description === this.storage[this.$props.indexOfTask].description)
-    || !(this.time === this.storage[this.$props.indexOfTask].time)) {
+    || !(this.description === this.storage[this.$props.indexOfTask].description)) {
       this.saveButton = true;
     }
   }

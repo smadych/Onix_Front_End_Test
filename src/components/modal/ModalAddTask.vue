@@ -28,7 +28,7 @@ export default class ModalAddTask extends Vue {
 
   showErrorMessage: boolean = false
 
-  close() {
+  close(): void {
     this.$emit('close');
   }
 
