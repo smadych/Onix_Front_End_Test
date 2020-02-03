@@ -8,10 +8,10 @@ main
       .input-date(ref='dateFilter')
         input.date-filter(type='date')
         input.date-filter(type='date')
-        .apply
+        .wrapper-btn
           button.apply-btn(@click='runDateFilter') apply
           button.cencel(@click='cencelDateFilter') cencel
-     .wrapper
+     .wrapper(ref='kanban')
       .todo
         h4(v-if='todoArrLength > 0') {{todoArrLength}}
         h4(v-else) no cards
@@ -20,7 +20,7 @@ main
         :move='checkMove' group="a" @change="log"
         )
           div(class='item todoCard' v-for='(statusL, index) in filterTodoArr'
-          @click='showModalEditFunc(statusL)' ref='todoDate'
+          @click='showModalEditFunc(statusL)'
           ) {{statusL.title}} - {{statusL.deadline}}
       .in-progress
         h4(v-if='inProgressArrLength > 0') {{inProgressArrLength}}
@@ -30,7 +30,7 @@ main
         draggable=".item" group="a" :move='checkMove' @change="log"
         )
           div(class='item inProgressCard' v-for='(statusL, index) in filterInProgressArr'
-          @click='showModalEditFunc(statusL)' ref='inProgressDate'
+          @click='showModalEditFunc(statusL)'
           ) {{statusL.title}} - {{statusL.deadline}}
       .done
         h4(v-if='doneArrLength > 0') {{doneArrLength}}
@@ -40,7 +40,7 @@ main
         :move='checkMove' @change="log"
         )
           div(class='item doneCard' v-for='(statusL, index) in filterDoneArr'
-          @click='showModalEditFunc(statusL)' ref='doneDate'
+          @click='showModalEditFunc(statusL)'
           ) {{statusL.title}} - {{statusL.deadline}}
 </template>
 
@@ -94,9 +94,14 @@ export default class Kanban extends Vue {
       this.getLengthOfArrays();
     }
 
+    mounted() {
+      this.setClassDeadline();
+    }
+
     updated() {
       this.getCurrentColumn();
       this.getLengthOfArrays();
+      this.setClassDeadline();
     }
 
     beforeDestroy() {
@@ -118,17 +123,21 @@ export default class Kanban extends Vue {
     runDateFilter() {
       const date1 = this.ref.dateFilter.childNodes[0].value;
       const date2 = this.ref.dateFilter.childNodes[1].value;
-      const copyStore = this.storeArr.filter(
-        task => new Date(new Date(task.deadline).toLocaleDateString())
-        >= new Date(this.ref.dateFilter.childNodes[0].value)
-        && new Date(new Date(task.deadline).toLocaleDateString())
-        <= new Date(this.ref.dateFilter.childNodes[1].value),
-      );
-      this.clearArrays();
-      this.getTasks(copyStore);
+      if (date1 !== '' && date2 !== '') {
+        const copyStore = this.storeArr.filter(
+          task => new Date(task.deadline.split('.').reverse().join('-'))
+          >= new Date(this.ref.dateFilter.childNodes[0].value)
+          && new Date(task.deadline.split('.').reverse().join('-'))
+          <= new Date(this.ref.dateFilter.childNodes[1].value),
+        );
+        this.clearArrays();
+        this.getTasks(copyStore);
+      }
     }
 
     cencelDateFilter() {
+      this.ref.dateFilter.childNodes[0].value = '';
+      this.ref.dateFilter.childNodes[1].value = '';
       this.clearArrays();
       this.getTasks(this.storeArr);
     }
@@ -157,6 +166,34 @@ export default class Kanban extends Vue {
       this.todoArrLength = this.todoArr.length;
       this.inProgressArrLength = this.inProgressArr.length;
       this.doneArrLength = this.doneArr.length;
+    }
+
+    setClassDeadline() {
+      for (let j = 0; j < 2; j += 1) {
+        if (j === 0) {
+          this.setClass(this.todoArr, j);
+        } else {
+          this.setClass(this.inProgressArr, j);
+        }
+      }
+    }
+
+    setClass(array: any, j: number) {
+      for (let i = 0; i < array.length; i += 1) {
+        const currCard = new Date(array[i].deadline.split('.').reverse().join('-'));
+        if (
+          this.ref.kanban.children[j].children[2].children[i].classList.contains('yellow-alert')) {
+          this.ref.kanban.children[j].children[2].children[i].classList.remove('yellow-alert');
+        } else if (
+          this.ref.kanban.children[j].children[2].children[i].classList.contains('red-alert')) {
+          this.ref.kanban.children[j].children[2].children[i].classList.remove('red-alert');
+        }
+        if (new Date().toLocaleDateString() === new Date(currCard).toLocaleDateString()) {
+          this.ref.kanban.children[j].children[2].children[i].classList.add('yellow-alert');
+        } else if (new Date().toLocaleDateString() > new Date(currCard).toLocaleDateString()) {
+          this.ref.kanban.children[j].children[2].children[i].classList.add('red-alert');
+        }
+      }
     }
 
     getTasks(array: any): void {
@@ -228,7 +265,6 @@ export default class Kanban extends Vue {
       }
       div {
         border-radius: 8px;
-        display: flex;
         flex-direction: column;
         input {
           width: 93%;
@@ -246,11 +282,6 @@ export default class Kanban extends Vue {
           border-radius: 8px;
           padding: 0;
         }
-        min-width: 100px;
-      }
-      .newDivs {
-        display: flex;
-        flex-direction: row;
       }
       .item {
         padding: 5px;
@@ -269,7 +300,14 @@ export default class Kanban extends Vue {
         background-color: #FFFACD;
       }
       .missDeadline {
+        background-color: #FF7F50;
+      }
+      .red-alert {
         background-color: red;
+      }
+      .yellow-alert::after {
+        content: url(/assets/images/attention.png);
+        margin-left: 5px;
       }
     }
     .input-wrapper {
@@ -286,7 +324,9 @@ export default class Kanban extends Vue {
         padding: 5px;
         border: 2px solid #EAEAEA;
         border-radius: 5px;
-        .apply {
+        .wrapper-btn {
+          display: flex;
+          flex-flow: wrap;
           button {
             margin: 0 auto;
             display: block;

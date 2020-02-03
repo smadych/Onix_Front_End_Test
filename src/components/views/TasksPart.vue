@@ -261,4 +261,10 @@ export default class Tasks extends Vue {
     .task-area {
       border-radius: 5px;
     }
+    .notifications-block {
+      margin: 30px auto 100px auto;
+      width: 90%;
+      // min-width: 90%;
+      // min-height: 80%;
+    }
 </style>

@@ -66,8 +66,8 @@ body {
   }
 
   .notifications-block {
-    min-width: 90%;
-    min-height: 80%;
+    /* min-width: 90%;
+    min-height: 80%; */
   }
 }
 @media only screen and (max-width: 870px) {
@@ -218,7 +218,7 @@ main {
         height: 100vh;
         .notifications-block {
             margin: 30px auto 100px auto;
-            width: 70%;
+            // width: 90%;
             border-radius: 8px;
             background: #ffffff;
 
