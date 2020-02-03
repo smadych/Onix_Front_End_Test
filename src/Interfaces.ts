@@ -2,8 +2,9 @@
 export interface TasksInterface {
     status: string
     title: string
-    description: any
+    description: string
     time: string
+    deadline: string
 }
 
 export enum Status {

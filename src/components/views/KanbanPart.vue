@@ -3,42 +3,45 @@ main
   section
    .notifications-block
      ModalEdit(v-if='showModalEdit' @close='close' :indexOfTask='indexTask' )
+     .input-wrapper
+      input.search(type='text' placeholder='title filter' v-model='search')
+      .input-date(ref='dateFilter')
+        input.date-filter(type='date')
+        input.date-filter(type='date')
+        .apply
+          button.apply-btn(@click='runDateFilter') apply
+          button.cencel(@click='cencelDateFilter') cencel
      .wrapper
       .todo
-        input(type='text' placeholder='type here..' v-model='title')
         h4(v-if='todoArrLength > 0') {{todoArrLength}}
         h4(v-else) no cards
         h3 {{status.todo}}
         draggable(:list="todoArr" id='todo' class="list-group" draggable=".item"
         :move='checkMove' group="a" @change="log"
         )
-          div(class='item todoCard' v-for='(statusL, index) in todoArr'
-          @click='showModalEditFunc(statusL)'
-          ) {{statusL.title}} - {{statusL.time}}
+          div(class='item todoCard' v-for='(statusL, index) in filterTodoArr'
+          @click='showModalEditFunc(statusL)' ref='todoDate'
+          ) {{statusL.title}} - {{statusL.deadline}}
       .in-progress
-        input(type='text' placeholder='type here..')
         h4(v-if='inProgressArrLength > 0') {{inProgressArrLength}}
         h4(v-else) no cards
         h3 {{status.inProgress}}
         draggable(:list="inProgressArr" id='in-progress' class="list-group"
-        draggable=".item" group="a"
-        :move='checkMove'
-        @change="log"
+        draggable=".item" group="a" :move='checkMove' @change="log"
         )
-          div(class='item inProgressCard' v-for='(statusL, index) in inProgressArr'
-          @click='showModalEditFunc(statusL)'
-          ) {{statusL.title}} - {{statusL.time}}
+          div(class='item inProgressCard' v-for='(statusL, index) in filterInProgressArr'
+          @click='showModalEditFunc(statusL)' ref='inProgressDate'
+          ) {{statusL.title}} - {{statusL.deadline}}
       .done
-        input(type='text' placeholder='type here..')
         h4(v-if='doneArrLength > 0') {{doneArrLength}}
         h4(v-else) no cards
         h3 {{status.done}}
         draggable(:list="doneArr" id='done' class="list-group" draggable=".item" group="a"
         :move='checkMove' @change="log"
         )
-          div(class='item doneCard' v-for='(statusL, index) in doneArr'
-          @click='showModalEditFunc(statusL)'
-          ) {{statusL.title}} - {{statusL.time}}
+          div(class='item doneCard' v-for='(statusL, index) in filterDoneArr'
+          @click='showModalEditFunc(statusL)' ref='doneDate'
+          ) {{statusL.title}} - {{statusL.deadline}}
 </template>
 
 <script lang="ts">
@@ -81,11 +84,13 @@ export default class Kanban extends Vue {
 
     currentEl: string = ''
 
-    title: string = ''
+    search: string = ''
+
+    ref: any = this.$refs
 
     created() {
       this.getDataFromStorage();
-      this.getTasks();
+      this.getTasks(this.storeArr);
       this.getLengthOfArrays();
     }
 
@@ -96,6 +101,36 @@ export default class Kanban extends Vue {
 
     beforeDestroy() {
       this.addDataToStorage();
+    }
+
+    get filterTodoArr(): any {
+      return this.todoArr.filter(task => task.title.indexOf(this.search) !== -1);
+    }
+
+    get filterInProgressArr(): any {
+      return this.inProgressArr.filter(task => task.title.indexOf(this.search) !== -1);
+    }
+
+    get filterDoneArr(): any {
+      return this.doneArr.filter(task => task.title.indexOf(this.search) !== -1);
+    }
+
+    runDateFilter() {
+      const date1 = this.ref.dateFilter.childNodes[0].value;
+      const date2 = this.ref.dateFilter.childNodes[1].value;
+      const copyStore = this.storeArr.filter(
+        task => new Date(new Date(task.deadline).toLocaleDateString())
+        >= new Date(this.ref.dateFilter.childNodes[0].value)
+        && new Date(new Date(task.deadline).toLocaleDateString())
+        <= new Date(this.ref.dateFilter.childNodes[1].value),
+      );
+      this.clearArrays();
+      this.getTasks(copyStore);
+    }
+
+    cencelDateFilter() {
+      this.clearArrays();
+      this.getTasks(this.storeArr);
     }
 
     getDataFromStorage(): void {
@@ -124,14 +159,14 @@ export default class Kanban extends Vue {
       this.doneArrLength = this.doneArr.length;
     }
 
-    getTasks(): void {
-      for (let i = 0; i < this.storeArr.length; i += 1) {
-        if (this.storeArr[i].status === Status.todo) {
-          this.todoArr.push(this.storeArr[i]);
-        } else if (this.storeArr[i].status === Status.inProgress) {
-          this.inProgressArr.push(this.storeArr[i]);
+    getTasks(array: any): void {
+      for (let i = 0; i < array.length; i += 1) {
+        if (array[i].status === Status.todo) {
+          this.todoArr.push(array[i]);
+        } else if (array[i].status === Status.inProgress) {
+          this.inProgressArr.push(array[i]);
         } else {
-          this.doneArr.push(this.storeArr[i]);
+          this.doneArr.push(array[i]);
         }
       }
     }
@@ -139,7 +174,7 @@ export default class Kanban extends Vue {
     close(): void {
       this.clearArrays();
       this.getDataFromStorage();
-      this.getTasks();
+      this.getTasks(this.storeArr);
       this.getLengthOfArrays();
     }
 
@@ -182,7 +217,7 @@ export default class Kanban extends Vue {
 
 <style lang="scss" scoped>
     .wrapper {
-      padding: 30px 0 30px 0;
+      padding: 10px 0 30px 0;
       display: flex;
       border-radius: 8px;
       justify-content: space-around;
@@ -198,10 +233,6 @@ export default class Kanban extends Vue {
         input {
           width: 93%;
           margin: 5px auto;
-          border-radius: 5px;
-          font-size: 14px;
-          outline: none;
-          border: 2px solid #EAEAEA;
         }
         h3 {
           text-align: center;
@@ -236,6 +267,39 @@ export default class Kanban extends Vue {
       }
       .todoCard {
         background-color: #FFFACD;
+      }
+      .missDeadline {
+        background-color: red;
+      }
+    }
+    .input-wrapper {
+      display: flex;
+      flex-direction: column;
+      padding: 10px 0 10px 0;
+      border-radius: 0 0 8px 8px;
+      border: 2px solid #EAEAEA;
+      width: 90%;
+      margin: 0 auto;
+      margin-bottom: 30px;
+      .input-date {
+        margin: 0 auto;
+        padding: 5px;
+        border: 2px solid #EAEAEA;
+        border-radius: 5px;
+        .apply {
+          button {
+            margin: 0 auto;
+            display: block;
+          }
+        }
+      }
+      .search, .date-filter {
+        margin: 0 auto;
+        margin-bottom: 15px;
+        border-radius: 5px;
+        font-size: 15px;
+        outline: none;
+        border: 2px solid #EAEAEA;
       }
     }
 </style>

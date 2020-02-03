@@ -19,6 +19,7 @@
                         td(@click='showModalEditFunc(indexTask=index)') {{task.title}}
                         td(@click='showModalEditFunc(indexTask=index)') {{task.description}}
                         td(@click='showModalEditFunc(indexTask=index)') {{task.time}}
+                        td(@click='showModalEditFunc(indexTask=index)') {{task.deadline}}
                         td
                           button.clear(@click="removeTask(task)") delete
 </template>
@@ -36,7 +37,7 @@ import ModalEdit from '../modal/ModalEdit.vue';
   },
 })
 export default class Tasks extends Vue {
-  titlesTop: string[] = ['Status', 'Title', 'Description', 'Time']
+  titlesTop: string[] = ['Status', 'Title', 'Description', 'Time', 'Deadline']
 
   // An array with tasks
   arr: TasksInterface[] = []
@@ -59,7 +60,7 @@ export default class Tasks extends Vue {
   // Input for description
   addDescription: any = ''
 
-  currDate: string = ''
+  deadLine: string = ''
 
   time: Date = new Date();
 
@@ -119,16 +120,16 @@ export default class Tasks extends Vue {
     if (sessionStorage.getItem('arr') === null) {
       this.arr = [
         {
-          status: Status.todo, title: 'practice', description: 'studing', time: this.getDate(),
+          status: Status.todo, title: 'practice', description: 'studing', time: new Date().toLocaleDateString(), deadline: this.generateDeadline(),
         },
         {
-          status: Status.inProgress, title: 'chilling', description: 'walk in the park', time: this.getDate(),
+          status: Status.inProgress, title: 'chilling', description: 'walk in the park', time: new Date().toLocaleDateString(), deadline: this.generateDeadline(),
         },
         {
-          status: Status.done, title: 'sleep', description: 'go to bad', time: this.getDate(),
+          status: Status.done, title: 'sleep', description: 'go to bad', time: new Date().toLocaleDateString(), deadline: this.generateDeadline(),
         },
         {
-          status: Status.done, title: 'practice', description: 'studing', time: this.getDate(),
+          status: Status.done, title: 'practice', description: 'studing', time: new Date().toLocaleDateString(), deadline: this.generateDeadline(),
         },
       ];
       this.addDataToStorage();
@@ -142,11 +143,11 @@ export default class Tasks extends Vue {
   }
 
   // Gets current time and date
-  getDate(): string {
-    const currDate = new Date();
+  generateDeadline(): string {
+    const currDate = this.time;
     currDate.setDate(currDate.getDate() + Math.floor(Math.random() * Math.floor(5)));
-    this.currDate = `${currDate.getDate()}.${currDate.getMonth() + 1}.${currDate.getFullYear()}`;
-    return this.currDate;
+    const deadLine = new Date(currDate).toLocaleDateString();
+    return deadLine;
   }
 
   // Animates new added task to the list
@@ -161,21 +162,22 @@ export default class Tasks extends Vue {
   }
 
   addNewTask(): TasksInterface {
-    const obj = {
+    const task = {
       status: Status.todo,
       title: this.addTitle,
       description: this.addDescription,
-      time: this.getDate(),
+      time: new Date().toLocaleDateString(),
+      deadline: this.deadLine,
     };
-    return obj;
+    return task;
   }
 
   // Adds new task into array
   addTodo(): void {
-    // this.getDate();
     const task = this.addNewTask();
     this.addTitle = '';
     this.addDescription = '';
+    this.deadLine = '';
     this.arr.splice(0, 0, task);
     this.runAnimationNewTask = true;
   }
@@ -206,9 +208,10 @@ export default class Tasks extends Vue {
     this.showModalEdit = false;
   }
 
-  sendTask(title: any, description: any): void {
+  sendTask(title: string, description: string, deadLine: string): void {
     this.addTitle = title;
     this.addDescription = description;
+    this.deadLine = deadLine;
     this.close();
     this.addTodo();
   }

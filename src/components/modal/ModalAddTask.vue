@@ -4,11 +4,12 @@ transition(name='modal-fade')
     .modal
       form(@submit.prevent="addTodo")
             h5 Add new task
-            .input-wrapper
+            .input-wrapper(ref='getTime')
               input.titleInput(type="text" name="title"
               placeholder="Enter the title" v-model="addTitle")
               input.descriptionInput(type="text" name="description"
               placeholder="Enter a description" v-model="addDescription")
+              input(type='date' v-model='deadline')
               p.errorMessage(v-if='showErrorMessage') {{errorMessage}}
             .btn-wrapper
               button.add Add
@@ -24,9 +25,13 @@ export default class ModalAddTask extends Vue {
 
   addDescription: any = ''
 
+  deadline: any = ''
+
   errorMessage: string = 'The field is empty. Please type a title and description'
 
   showErrorMessage: boolean = false
+
+  dom: any = this.$refs
 
   close(): void {
     this.$emit('close');
@@ -36,10 +41,16 @@ export default class ModalAddTask extends Vue {
     if (this.addTitle === '' || this.addDescription === '') {
       this.showErrorMessage = true;
     } else {
-      this.$emit('sendTask', this.addTitle, this.addDescription);
+      this.getDedLine();
+      this.$emit('sendTask', this.addTitle, this.addDescription, this.deadline);
       this.addTitle = '';
       this.addDescription = '';
     }
+  }
+
+  getDedLine(): void {
+    const time = this.deadline;
+    this.deadline = new Date(time).toLocaleDateString();
   }
 }
 </script>
@@ -63,6 +74,7 @@ export default class ModalAddTask extends Vue {
     background: #FFFFFF;
     box-shadow: 2px 2px 20px 1px;
     overflow-x: auto;
+    width: 250px;
     display: flex;
     flex-direction: column;
   }
@@ -73,27 +85,19 @@ export default class ModalAddTask extends Vue {
         flex-direction: column;
         padding: 10px;
         .input-wrapper {
-            .titleInput {
-                margin-right: 10px;
-            }
+          display: flex;
+          flex-direction: column;
+          input {
+            font-size: 18px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+          }
         }
     }
     h5 {
         font-size: 22px;
         margin: 10px auto;
         text-transform: uppercase;
-    }
-    input {
-        margin: 0 auto;
-        font-size: 20px;
-        outline: none;
-        border-radius: 5px;
-    }
-    .titleInput {
-        margin-bottom: 5px;
-    }
-    .descriptionInput {
-        margin-bottom: 15px;
     }
     .errorMessage {
       color: red;

@@ -114,9 +114,8 @@ body {
     flex-flow: wrap;
     list-style: none;
   }
-  .header-nav ul li {
-    padding-bottom: 15px;
-    margin-bottom: 10px;
+  .header-nav a {
+    margin-bottom: 13px;
     border-bottom: 2px solid transparent;
   }
   .header-nav ul li:hover {
@@ -134,6 +133,7 @@ body {
     overflow: auto;
   }
 }
+
 </style>
 
 <!-- Styles for header and main content -->
@@ -388,7 +388,7 @@ main {
     td {
         padding: 15px;
     }
-    .clear, .add-task, .edit, .save, .cencel, .add {
+    .clear, .add-task, .edit, .save, .cencel, .add, .apply-btn {
         width: 80px;
         font-size: 14px;
         background: #EAEAEA;

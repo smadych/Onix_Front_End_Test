@@ -133,6 +133,8 @@ export default Vue.extend({
             font-size: 16px;
             font-weight: 200;
             padding-bottom: 12px;
+            display: flex;
+            flex-flow: wrap;
                 a {
                     text-decoration: none;
                     color: #5A5A5A;
