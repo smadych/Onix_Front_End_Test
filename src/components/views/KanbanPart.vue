@@ -2,46 +2,47 @@
 main
   section
    .notifications-block
-     ModalEdit(v-if='showModalEdit' @close='close' :indexOfTask='indexTask' )
-     .input-wrapper
-      input.search(type='text' placeholder='title filter' v-model='search')
-      .input-date(ref='dateFilter')
-        input.date-filter(type='date')
-        input.date-filter(type='date')
-        .wrapper-btn
-          button.apply-btn(@click='runDateFilter') apply
-          button.cencel(@click='cencelDateFilter') cencel
-     .wrapper(ref='kanban')
-      .todo
-        h4(v-if='todoArrLength > 0') {{todoArrLength}}
-        h4(v-else) no cards
-        h3 {{status.todo}}
-        draggable(:list="todoArr" id='todo' class="list-group" draggable=".item"
-        :move='checkMove' group="a" @change="log"
-        )
-          div(class='item todoCard' v-for='(statusL, index) in filterTodoArr'
-          @click='showModalEditFunc(statusL)'
-          ) {{statusL.title}} - {{statusL.deadline}}
-      .in-progress
-        h4(v-if='inProgressArrLength > 0') {{inProgressArrLength}}
-        h4(v-else) no cards
-        h3 {{status.inProgress}}
-        draggable(:list="inProgressArr" id='in-progress' class="list-group"
-        draggable=".item" group="a" :move='checkMove' @change="log"
-        )
-          div(class='item inProgressCard' v-for='(statusL, index) in filterInProgressArr'
-          @click='showModalEditFunc(statusL)'
-          ) {{statusL.title}} - {{statusL.deadline}}
-      .done
-        h4(v-if='doneArrLength > 0') {{doneArrLength}}
-        h4(v-else) no cards
-        h3 {{status.done}}
-        draggable(:list="doneArr" id='done' class="list-group" draggable=".item" group="a"
-        :move='checkMove' @change="log"
-        )
-          div(class='item doneCard' v-for='(statusL, index) in filterDoneArr'
-          @click='showModalEditFunc(statusL)'
-          ) {{statusL.title}} - {{statusL.deadline}}
+    .wrapper-kanban
+      ModalEdit(v-if='showModalEdit' @close='close' :indexOfTask='indexTask' )
+      .input-wrapper
+        input.search(type='text' placeholder='title filter' v-model='search')
+        .input-date(ref='dateFilter')
+          input.date-filter(type='date')
+          input.date-filter(type='date')
+          .wrapper-btn
+            button.apply-btn(@click='runDateFilter') apply
+            button.cencel(@click='cencelDateFilter') cencel
+      .wrapper(ref='kanban')
+        .todo
+          h4(v-if='todoArrLength > 0') {{todoArrLength}}
+          h4(v-else) no cards
+          h3 {{status.todo}}
+          draggable(:list="todoArr" id='todo' class="list-group" draggable=".item"
+          :move='checkMove' group="a" @change="log"
+          )
+            div(class='item todoCard' v-for='(statusL, index) in filterTodoArr'
+            @click='showModalEditFunc(statusL)'
+            ) {{statusL.title}} - {{statusL.deadline}}
+        .in-progress
+          h4(v-if='inProgressArrLength > 0') {{inProgressArrLength}}
+          h4(v-else) no cards
+          h3 {{status.inProgress}}
+          draggable(:list="inProgressArr" id='in-progress' class="list-group"
+          draggable=".item" group="a" :move='checkMove' @change="log"
+          )
+            div(class='item inProgressCard' v-for='(statusL, index) in filterInProgressArr'
+            @click='showModalEditFunc(statusL)'
+            ) {{statusL.title}} - {{statusL.deadline}}
+        .done
+          h4(v-if='doneArrLength > 0') {{doneArrLength}}
+          h4(v-else) no cards
+          h3 {{status.done}}
+          draggable(:list="doneArr" id='done' class="list-group" draggable=".item" group="a"
+          :move='checkMove' @change="log"
+          )
+            div(class='item doneCard' v-for='(statusL, index) in filterDoneArr'
+            @click='showModalEditFunc(statusL)'
+            ) {{statusL.title}} - {{statusL.deadline}}
 </template>
 
 <script lang="ts">
@@ -253,6 +254,10 @@ export default class Kanban extends Vue {
 </script>
 
 <style lang="scss" scoped>
+  .notifications-block {
+    .wrapper-kanban {
+      width: 100%;
+    }
     .wrapper {
       padding: 10px 0 30px 0;
       display: flex;
@@ -342,4 +347,5 @@ export default class Kanban extends Vue {
         border: 2px solid #EAEAEA;
       }
     }
+  }
 </style>

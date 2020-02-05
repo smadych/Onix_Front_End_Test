@@ -6,7 +6,6 @@
         v-on:sendTask='(...args)=>this.sendTask(...args)')
         ModalEdit(v-if='showModalEdit' @close='close' :indexOfTask='indexTask')
         section
-            .notifications-block
                 .wraper-task
                   table.tableDesk
                     thead
@@ -219,6 +218,11 @@ export default class Tasks extends Vue {
 </script>
 
 <style lang="scss">
+section {
+  .wraper-task {
+    padding-top: 30px;
+  }
+}
 .newTask {
     border: 2px solid #EAEAEA;
     border-radius: 10px;
@@ -262,6 +266,7 @@ export default class Tasks extends Vue {
       border-radius: 5px;
     }
     .notifications-block {
+      // background-color: aqua !important;
       margin: 30px auto 100px auto;
       width: 90%;
       // min-width: 90%;

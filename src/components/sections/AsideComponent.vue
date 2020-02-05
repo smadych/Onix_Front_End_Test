@@ -1,40 +1,41 @@
 <!-- Sidebar component -->
 <template lang="pug">
-  aside
-    .top-block
-      .search
-        h3 projectus
-    .profile-block
-      .profile-info
-        .profile-name-position
-          p.text-name {{userName}}
-          p.position {{position}}
-      .btn
-        span(class="dot-btn margin")
-        span(class="dot-btn margin")
-        span.dot-btn
-    .info-block
-      .completed-tasks(@click="addTask()")
-        p.number(id="completed-tasks-number") {{completedTasks}}
-        p.task-status(id="completed-tasks") Completed Tasks
-      .open-tasks
-        p.number(id="open-tasks-number") {{openTasks}}
-        //- Refs to Task component if an openTask variable greather then zero
-        p.task-status(v-if='openTasks > 0')
-          router-link(to="/tasks") Open Tasks
-        p.task-status(v-else) Open Tasks
-    nav.nav-block
-      ul
-        li.menu Menu
-        li Home
-        li My Tasks
-        li.notifications Notifications
-          span#notifications-number.notifications-number {{index}}
+    aside(v-if='!closeSidebar')
+      .wrap-close
+          div.close(href='#' v-if='!closeSidebar' @click='closeSidebarFunc')
+      .top-block
+        .search
+          h3 projectus
+      .profile-block
+        .profile-info
+          .profile-name-position
+            p.text-name {{userName}}
+            p.position {{position}}
+        .btn
+          span(class="dot-btn margin")
+          span(class="dot-btn margin")
+          span.dot-btn
+      .info-block
+        .completed-tasks(@click="addTask()")
+          p.number(id="completed-tasks-number") {{completedTasks}}
+          p.task-status(id="completed-tasks") Completed Tasks
+        .open-tasks
+          p.number(id="open-tasks-number") {{openTasks}}
+          //- Refs to Task component if an openTask variable greather then zero
+          p.task-status(v-if='openTasks > 0')
+            router-link(to="/tasks") Open Tasks
+          p.task-status(v-else) Open Tasks
+      nav.nav-block
+        ul
+          li.menu Menu
+          li Home
+          li My Tasks
+          li.notifications Notifications
+            span#notifications-number.notifications-number {{index}}
 </template>
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator';
-import eventBus from '@/main';
 
 @Component({
   // Take index of picture from Activity component
@@ -53,6 +54,8 @@ export default class Aside extends Vue {
 
   position: string = 'Product Owner';
 
+  closeSidebar: boolean = false
+
   // Adds completed projects
   addTask() {
     if (this.openTasks > 0) {
@@ -64,7 +67,13 @@ export default class Aside extends Vue {
       alert('There are no open tasks!');
     }
   }
+
+  closeSidebarFunc() {
+    this.closeSidebar = true;
+    this.$emit('closeSidebarProp', this.closeSidebar);
+  }
 }
+
 </script>
 
 <style>
@@ -92,11 +101,14 @@ export default class Aside extends Vue {
   height: 80px;
 }
 
+
 aside {
   width: 270px;
   background-color: black;
   color: white;
-  display: inline-block;
+  /* display: inline-block; */
+  display: flex;
+  flex-direction: column;
   vertical-align: top;
   overflow: auto;
   flex-shrink: 0;
@@ -232,5 +244,35 @@ aside .nav-block ul .notifications-number {
   color: #131313;
   border-radius: 100%;
   padding: 1px 6px 1px 6px;
+}
+.wrap-close {
+  display: flex;
+  justify-content: flex-end;
+}
+.close {
+  position: absolute;
+  left: 215px;
+  top: 5px;
+  /* display: block; */
+  width: 25px;
+  height: 25px;
+  opacity: 0.3;
+}
+.close:hover {
+  opacity: 1;
+}
+.close:before, .close:after {
+  position: absolute;
+  left: 15px;
+  content: ' ';
+  height: 23px;
+  width: 2px;
+  background-color: white;
+}
+.close:before {
+  transform: rotate(45deg);
+}
+.close:after {
+  transform: rotate(-45deg);
 }
 </style>

@@ -1,8 +1,13 @@
 <!-- This component includes rest of components of this project -->
 <template lang="pug">
   #layout
+    .sandwich(v-if='closeSidebarStatus' @click='closeSidebarStatus = false')
+      .sandwich-btn
+      .sandwich-btn
+      .sandwich-btn
     //- Sends current index of the picture from Activity component
-    AsideComponent(:index="currentPicture")
+    AsideComponent(v-if='!closeSidebarStatus' :index="currentPicture"
+    v-on:closeSidebarProp='closeSedebarFunc')
     main
         HeaderComponent
         //- Show an appropriate component
@@ -21,6 +26,12 @@ import HeaderComponent from './sections/HeaderComponent.vue';
 })
 export default class Layout extends Vue {
   currentPicture: number = 3
+
+  closeSidebarStatus: boolean = false
+
+  closeSedebarFunc(status: boolean) {
+    this.closeSidebarStatus = status;
+  }
 }
 </script>
 
@@ -34,7 +45,15 @@ export default class Layout extends Vue {
   display: flex;
   width: 100%;
 }
-
+#layout .sandwich {
+    padding: 15px;
+}
+#layout .sandwich-btn {
+  width: 35px;
+  height: 5px;
+  background-color: black;
+  margin: 6px 0;
+}
 * {
     margin: 0;
     padding: 0;
@@ -64,11 +83,6 @@ body {
     flex-flow: wrap;
     justify-content: flex-start !important;
   }
-
-  .notifications-block {
-    /* min-width: 90%;
-    min-height: 80%; */
-  }
 }
 @media only screen and (max-width: 870px) {
   body {
@@ -82,6 +96,10 @@ body {
   aside {
     width: 100%;
   }
+
+  /* .wraper-task {
+      font-size: 10px;
+  } */
 
   .info-block {
     flex-flow: column;
@@ -218,7 +236,6 @@ main {
         height: 100vh;
         .notifications-block {
             margin: 30px auto 100px auto;
-            // width: 90%;
             border-radius: 8px;
             background: #ffffff;
 
@@ -317,9 +334,6 @@ main {
                     cursor: pointer;
                 }
             }
-            .wraper-task {
-                padding: 20px;
-        }
     }
 }
 .newTask {
@@ -331,11 +345,11 @@ main {
     padding: 0 20px;
     margin: 5px auto;
 }
-    table {
-        padding: 30px;
-        width: 80%;
-        margin: 0 auto;
-    }
+    // table {
+    //     padding: 30px;
+    //     width: 80%;
+    //     margin: 0 auto;
+    // }
     @keyframes animationForNewTask {
         0% {
             background-color: white;
@@ -362,11 +376,12 @@ main {
         }
     }
     .tableDesk {
+        // padding-top: 30px !important;
         .task-area {
-            border-bottom: 1px solid #f0efef;
+            border-bottom: 1px solid white;
         }
         .task-area:hover {
-            background-color: #f0efef;
+            background-color: white;
         }
     }
     table, th, td {
