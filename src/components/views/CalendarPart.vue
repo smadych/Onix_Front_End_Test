@@ -7,9 +7,10 @@ main
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
+
 @Component({})
 export default class Calendar extends Vue {
-    title: string = 'Comming soon..'
+  title: string = 'Comming soon..'
 }
 </script>
 

@@ -308,32 +308,6 @@ main {
                 background-position: center;
                 background-size: 15px;
             }
-
-            .photo-icons {
-                flex-flow: wrap;
-                margin: 0 0 70px 87px;
-                padding-bottom: 20px;
-                .pic-first::before {
-                    background-image: url(/assets/images/dubai-island.jpg);
-                }
-
-                .pic-second::before {
-                    background-image: url(/assets/images/dubai-pic.jpeg);
-                    background-size: 180px;
-                }
-                .pic-third::before {
-                    background-image: url(/assets/images/dubai-pic2.jpg);
-                }
-                .pic-fourth::before {
-                    background-image: url(/assets/images/burjkhalifa.jpg);
-                }
-                span {
-                    margin-bottom: 10px;
-                }
-                span:hover {
-                    cursor: pointer;
-                }
-            }
     }
 }
 .newTask {
@@ -345,11 +319,6 @@ main {
     padding: 0 20px;
     margin: 5px auto;
 }
-    // table {
-    //     padding: 30px;
-    //     width: 80%;
-    //     margin: 0 auto;
-    // }
     @keyframes animationForNewTask {
         0% {
             background-color: white;

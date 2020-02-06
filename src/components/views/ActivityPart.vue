@@ -7,27 +7,24 @@
                     h4 today
                     .have-done
                         .text-info
-                            p {{info.haveDoneBlock}}
+                            p {{info.haveDoneBlock.text}}
                         .time
-                            p {{info.haveDoneTime}}
+                            p {{info.haveDoneBlock.time}}
                     .message
                         .text-info
-                            p {{info.messageBlock}}
+                            p {{info.messageBlock.text}}
                         .time
-                            p {{info.messageTime}}
+                            p {{info.messageBlock.time}}
                     .additional
-                        p {{info.additionalBlock}}
+                        p {{info.additionalBlock.text}}
                     .upload
                         .text-info
-                            p {{info.uploadBlock}}
+                            p {{info.uploadBlock.text}}
                         .time
-                            p {{info.uploadTime}}
+                            p {{info.uploadBlock.time}}
                     .photo-icons(ref="picElements")
-                        //- Pictures on the bottom. Realized by pseudo selectors
-                        span.pic-first(@click="getIndex($event)")
-                        span.pic-second(@click="getIndex($event)")
-                        span.pic-third(@click="getIndex($event)")
-                        span.pic-fourth(@click="getIndex($event)")
+                        img.pic(@click="getIndex(index)"
+                        v-for='(image, index) in images' :key='index' :id='index' :src='image')
 </template>
 
 <script lang="ts">
@@ -35,24 +32,18 @@ import { Component, Vue } from 'vue-property-decorator';
 
 @Component({})
 export default class Activity extends Vue {
-    info = {
-      haveDoneBlock: 'Darika Samak mark as done Listing on Product Hunt so that we can reach as many potential users',
-      haveDoneTime: '8:40 PM',
-      messageBlock: 'Emilee Simchenko commented on Account for teams and personal in bottom style',
-      messageTime: '7:32 PM',
-      additionalBlock: 'During a project build, it is necessary to evaluate the product design and development against project requirements and outcomes',
-      uploadBlock: 'Darika Samak uploaded 4 files on An option to search in current projects or in all projects',
-      uploadTime: '6:02 PM',
-    }
+    info: object = this.$store.state.activity
 
     currentPicture: number = 3
+
+    images: object = this.$store.state.srcImagesActivity
 
     domPicture: any = this.$refs
 
     // Gets class name from refs. Then compares them and give the index from the picture.
     getIndex(event: any): void {
       for (let i = 0; i < this.domPicture.picElements.children.length; i += 1) {
-        if (this.domPicture.picElements.childNodes[i].className === event.target.className) {
+        if (event === i) {
           this.currentPicture = i;
           // Send an index from picture to parent component
           this.$emit('showIndex', this.currentPicture);
@@ -61,3 +52,20 @@ export default class Activity extends Vue {
     }
 }
 </script>
+
+<style lang="scss" scoped>
+.photo-icons {
+    flex-flow: wrap;
+    margin: 30px 0 70px 87px;
+    padding-bottom: 20px;
+    .pic {
+        width: 130px;
+        height: 130px;
+        margin: 0 10px 10px 0;
+        border-radius: 8px;
+        &:hover {
+            cursor: pointer;
+        }
+    }
+}
+</style>

@@ -109,24 +109,24 @@ export default class Kanban extends Vue {
       this.addDataToStorage();
     }
 
-    get filterTodoArr(): any {
+    get filterTodoArr(): object {
       return this.todoArr.filter(task => task.title.indexOf(this.search) !== -1);
     }
 
-    get filterInProgressArr(): any {
+    get filterInProgressArr(): object {
       return this.inProgressArr.filter(task => task.title.indexOf(this.search) !== -1);
     }
 
-    get filterDoneArr(): any {
+    get filterDoneArr(): object {
       return this.doneArr.filter(task => task.title.indexOf(this.search) !== -1);
     }
 
-    runDateFilter() {
+    runDateFilter(): void {
       const date1 = this.ref.dateFilter.childNodes[0].value;
       const date2 = this.ref.dateFilter.childNodes[1].value;
       if (date1 !== '' && date2 !== '') {
         const copyStore = this.storeArr.filter(
-          task => new Date(task.deadline.split('.').reverse().join('-'))
+          (task: any) => new Date(task.deadline.split('.').reverse().join('-'))
           >= new Date(this.ref.dateFilter.childNodes[0].value)
           && new Date(task.deadline.split('.').reverse().join('-'))
           <= new Date(this.ref.dateFilter.childNodes[1].value),
@@ -136,7 +136,7 @@ export default class Kanban extends Vue {
       }
     }
 
-    cencelDateFilter() {
+    cencelDateFilter(): void {
       this.ref.dateFilter.childNodes[0].value = '';
       this.ref.dateFilter.childNodes[1].value = '';
       this.clearArrays();
@@ -169,7 +169,7 @@ export default class Kanban extends Vue {
       this.doneArrLength = this.doneArr.length;
     }
 
-    setClassDeadline() {
+    setClassDeadline(): void {
       for (let j = 0; j < 2; j += 1) {
         if (j === 0) {
           this.setClass(this.todoArr, j);
@@ -179,7 +179,7 @@ export default class Kanban extends Vue {
       }
     }
 
-    setClass(array: any, j: number) {
+    setClass(array: any, j: number): void {
       for (let i = 0; i < array.length; i += 1) {
         const currCard = new Date(array[i].deadline.split('.').reverse().join('-'));
         if (
@@ -235,7 +235,7 @@ export default class Kanban extends Vue {
       }
     }
 
-    log(evt: any): void {
+    log(evt: object): void {
       for (let i = 0; i < this.storeArr.length; i += 1) {
         if (this.storeArr[i] === this.currentEl) {
           this.storeArr[i].status = this.currentColumn;
