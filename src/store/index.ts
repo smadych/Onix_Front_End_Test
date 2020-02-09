@@ -1,47 +1,45 @@
+import {
+  createModule, mutation, createProxy, action, extractVuexModule,
+} from 'vuex-class-component';
 import Vue from 'vue';
 import Vuex from 'vuex';
+import { srcImagesActivity, activity } from './activity';
 import { TasksInterface, Status } from '@/Interfaces';
+
+const VuexModule = createModule({
+  namespaced: 'user',
+  strict: false,
+  target: 'nuxt',
+});
 
 Vue.use(Vuex);
 
-export default new Vuex.Store({
-  state: {
-    count: 3,
+export class Store extends VuexModule {
+  count: number = 3
 
-    activity: {
-      haveDoneBlock: {
-        text: 'Darika Samak mark as done Listing on Product Hunt so that we can reach as many potential users',
-        time: '8:40 PM',
-      },
-      messageBlock: {
-        text: 'Emilee Simchenko commented on Account for teams and personal in bottom style',
-        time: '7:32 PM',
-      },
-      additionalBlock: {
-        text: 'During a project build, it is necessary to evaluate the product design and development against project requirements and outcomes',
-      },
-      uploadBlock: {
-        text: 'Darika Samak uploaded 4 files on An option to search in current projects or in all projects',
-        time: '6:02 PM',
-      },
-    },
+  posts: any = []
 
-    srcImagesActivity: [
-      '/assets/images/dubai-island.jpg',
-      '/assets/images/dubai-pic.jpeg',
-      '/assets/images/dubai-pic2.jpg',
-      '/assets/images/burjkhalifa.jpg',
-    ],
-  },
-  getters: {
-    getCount: state => state.count,
-  },
-  mutations: {
-    // increment: state => state.count += 1,
-    // decrement: state => state.count -= 1
-  },
-  actions: {
-  },
+  activity: object = activity
+
+  srcImagesActivity: string[] = srcImagesActivity
+
+  get getImagesUrl() {
+    return this.srcImagesActivity;
+  }
+
+  get infoActivity() {
+    return this.activity;
+  }
+}
+
+// store.vuex.ts
+export const store = new Vuex.Store({
   modules: {
+    ...extractVuexModule(Store),
   },
 });
+
+// Creating proxies.
+export const vuexModule = {
+  store: createProxy(store, Store),
+};

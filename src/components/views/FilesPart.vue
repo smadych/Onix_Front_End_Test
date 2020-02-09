@@ -2,17 +2,17 @@
 main
     section
         .notifications-block
-            //- h1 {{title}}
             .wrapper-files
-                .files(v-for='image in imagesSrc') {{image}}
+                .files(v-for='image in images') {{image}}
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
+import { vuexModule } from '@/store';
 
 @Component({})
 export default class Files extends Vue {
-    imagesSrc: object = this.$store.state.srcImagesActivity
+  images: any = vuexModule.store.srcImagesActivity
 }
 </script>
 
@@ -33,6 +33,20 @@ export default class Files extends Vue {
         &:hover {
             background-color: antiquewhite;
         }
+    }
+
+}
+.posts {
+    display: flex;
+    width: 50%;
+    flex-direction: column;
+    margin: 0 auto;
+    border: 1px solid black;
+    margin-bottom: 20px;
+    h2 {
+        text-align: center;
+    }
+    div {
     }
 }
 </style>

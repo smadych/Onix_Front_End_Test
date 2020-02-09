@@ -32,7 +32,6 @@ transition(name='modal-fade')
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import index from '@/store';
 
 @Component({
   props: {

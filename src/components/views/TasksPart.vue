@@ -130,6 +130,12 @@ export default class Tasks extends Vue {
         {
           status: Status.done, title: 'practice', description: 'studing', time: new Date().toLocaleDateString(), deadline: this.generateDeadline(),
         },
+        {
+          status: Status.todo, title: 'practice', description: 'studing', time: new Date().toLocaleDateString(), deadline: this.generateDeadline(),
+        },
+        {
+          status: Status.inProgress, title: 'chilling', description: 'walk in the park', time: new Date().toLocaleDateString(), deadline: this.generateDeadline(),
+        },
       ];
       this.addDataToStorage();
     } else {

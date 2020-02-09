@@ -7,8 +7,9 @@ main
       .input-wrapper
         input.search(type='text' placeholder='title filter' v-model='search')
         .input-date(ref='dateFilter')
-          input.date-filter(type='date')
-          input.date-filter(type='date')
+          .wrapper-input
+            input.date-filter(type='date')
+            input.date-filter(type='date')
           .wrapper-btn
             button.apply-btn(@click='runDateFilter') apply
             button.cencel(@click='cencelDateFilter') cencel
@@ -271,6 +272,7 @@ export default class Kanban extends Vue {
       div {
         border-radius: 8px;
         flex-direction: column;
+        margin-bottom: 20px;
         input {
           width: 93%;
           margin: 5px auto;
@@ -329,6 +331,10 @@ export default class Kanban extends Vue {
         padding: 5px;
         border: 2px solid #EAEAEA;
         border-radius: 5px;
+        .wrapper-input {
+          display: flex;
+          flex-flow: wrap;
+        }
         .wrapper-btn {
           display: flex;
           flex-flow: wrap;
