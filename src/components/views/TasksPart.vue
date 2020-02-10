@@ -6,21 +6,21 @@
         v-on:sendTask='(...args)=>this.sendTask(...args)')
         ModalEdit(v-if='showModalEdit' @close='close' :indexOfTask='indexTask')
         section
-                .wraper-task
-                  table.tableDesk
-                    thead
-                      th(v-for="list in titlesTop"
-                      :key="list") {{list}}
-                    tbody(ref='elements')
-                      tr.task-area(v-for="(task, index) in arr" :key="index")
-                        td(@click='showModalEditFunc(indexTask=index)'
-                        :id='text') {{task.status}}
-                        td(@click='showModalEditFunc(indexTask=index)') {{task.title}}
-                        td(@click='showModalEditFunc(indexTask=index)') {{task.description}}
-                        td(@click='showModalEditFunc(indexTask=index)') {{task.time}}
-                        td(@click='showModalEditFunc(indexTask=index)') {{task.deadline}}
-                        td
-                          button.clear(@click="removeTask(task)") delete
+          .wraper-task
+            table.tableDesk
+              thead
+                th(v-for="list in titlesTop"
+                :key="list") {{list}}
+              tbody(ref='elements')
+                tr.task-area(v-for="(task, index) in vuexStore.tasksArray" :key="index")
+                  td(@click='showModalEditFunc(indexTask=index)'
+                  ) {{task.status}}
+                  td(@click='showModalEditFunc(indexTask=index)') {{task.title}}
+                  td(@click='showModalEditFunc(indexTask=index)') {{task.description}}
+                  td(@click='showModalEditFunc(indexTask=index)') {{task.time}}
+                  td(@click='showModalEditFunc(indexTask=index)') {{task.deadline}}
+                  td
+                    button.clear(@click="removeTask(task)") delete
 </template>
 
 <script lang="ts">
@@ -28,6 +28,7 @@ import { Component, Vue } from 'vue-property-decorator';
 import { TasksInterface, Status } from '@/Interfaces';
 import ModalAddTask from '../modal/ModalAddTask.vue';
 import ModalEdit from '../modal/ModalEdit.vue';
+import { vuexModule } from '@/store';
 
 @Component({
   components: {
@@ -38,17 +39,7 @@ import ModalEdit from '../modal/ModalEdit.vue';
 export default class Tasks extends Vue {
   titlesTop: string[] = ['Status', 'Title', 'Description', 'Time', 'Deadline']
 
-  // An array with tasks
-  arr: TasksInterface[] = []
-
-  // An object with json data
-  jsonArr: any = ''
-
-  // An object in local storage
-  storeArr: any = ''
-
-  // An object with json data
-  localStore: any = ''
+  vuexStore: any = vuexModule.store
 
   // Status of task
   addStatus: string = ''
@@ -76,8 +67,6 @@ export default class Tasks extends Vue {
 
   indexTask: number = 0
 
-  text: string = 'hello'
-
   mounted() {
     this.initialAddingArray();
     this.addsClassForAnimation();
@@ -89,17 +78,11 @@ export default class Tasks extends Vue {
     if (this.runAnimationNewTask) {
       this.animationNewTask();
     }
-    this.addDataToStorage();
-  }
-
-  addDataToStorage(): void {
-    this.jsonArr = JSON.stringify(this.arr);
-    sessionStorage.setItem('arr', this.jsonArr);
   }
 
   // Removes class with animation when it's done
   removeClassAnimation(): void {
-    for (let j = 0; j < this.arr.length; j += 1) {
+    for (let j = 0; j < this.vuexStore.tasksArray.length; j += 1) {
       this.domEl.elements.rows[j].classList.remove('change-font-size');
     }
     this.runBeforeUpdate = false;
@@ -107,7 +90,7 @@ export default class Tasks extends Vue {
 
   // Animate list when page is load
   addsClassForAnimation(): void {
-    for (let i = 0; i < this.arr.length; i += 1) {
+    for (let i = 0; i < this.vuexStore.tasksArray.length; i += 1) {
       setTimeout(() => {
         this.domEl.elements.rows[i].classList.add('change-font-size');
       }, 1000 * i);
@@ -116,8 +99,8 @@ export default class Tasks extends Vue {
 
   // Adds lists with tasks if an array is empty
   initialAddingArray(): void {
-    if (sessionStorage.getItem('arr') === null) {
-      this.arr = [
+    if (!this.vuexStore.incertTasks) {
+      this.vuexStore.tasksArray = [
         {
           status: Status.todo, title: 'practice', description: 'studing', time: new Date().toLocaleDateString(), deadline: this.generateDeadline(),
         },
@@ -133,17 +116,8 @@ export default class Tasks extends Vue {
         {
           status: Status.todo, title: 'practice', description: 'studing', time: new Date().toLocaleDateString(), deadline: this.generateDeadline(),
         },
-        {
-          status: Status.inProgress, title: 'chilling', description: 'walk in the park', time: new Date().toLocaleDateString(), deadline: this.generateDeadline(),
-        },
       ];
-      this.addDataToStorage();
-    } else {
-      this.localStore = sessionStorage.getItem('arr');
-      this.storeArr = JSON.parse(this.localStore);
-      for (let i = 0; i < this.storeArr.length; i += 1) {
-        this.arr.push(this.storeArr[i]);
-      }
+      this.vuexStore.incertTasks = true;
     }
   }
 
@@ -157,7 +131,7 @@ export default class Tasks extends Vue {
 
   // Animates new added task to the list
   animationNewTask(): void {
-    if (this.arr.length >= 1) {
+    if (this.vuexStore.tasksArray.length >= 1) {
       this.domEl.elements.rows[0].classList.add('list-enter-active');
       setTimeout(() => {
         this.domEl.elements.rows[0].classList.remove('list-enter-active');
@@ -183,14 +157,14 @@ export default class Tasks extends Vue {
     this.addTitle = '';
     this.addDescription = '';
     this.deadLine = '';
-    this.arr.splice(0, 0, task);
+    this.vuexStore.tasksArray.splice(0, 0, task);
     this.runAnimationNewTask = true;
   }
 
   // Remove task with appropriate data from array
   removeTask(taskEl: TasksInterface): void {
-    const indexEl: number = this.arr.indexOf(taskEl);
-    this.arr.splice(indexEl, 1);
+    const indexEl: number = this.vuexStore.tasksArray.indexOf(taskEl);
+    this.vuexStore.tasksArray.splice(indexEl, 1);
   }
 
   showM(): void {
@@ -200,14 +174,12 @@ export default class Tasks extends Vue {
   }
 
   showModalEditFunc(index: number): void {
-    this.addDataToStorage();
     if (!this.showModalEdit) {
       this.showModalEdit = true;
     }
   }
 
   close(): void {
-    this.arr = [];
     this.initialAddingArray();
     this.showModal = false;
     this.showModalEdit = false;

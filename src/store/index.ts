@@ -15,13 +15,19 @@ const VuexModule = createModule({
 Vue.use(Vuex);
 
 export class Store extends VuexModule {
-  count: number = 3
-
   posts: any = []
+
+  incertTasks: boolean = false
+
+  errorMessage: string = 'The field is empty. Please type a title and description.'
+
+  errorDeadline: string = 'Current date is not available. Please select a new one.'
 
   activity: object = activity
 
   srcImagesActivity: string[] = srcImagesActivity
+
+  tasksArray: any[] = []
 
   get getImagesUrl() {
     return this.srcImagesActivity;

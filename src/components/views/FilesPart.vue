@@ -12,7 +12,7 @@ import { vuexModule } from '@/store';
 
 @Component({})
 export default class Files extends Vue {
-  images: any = vuexModule.store.srcImagesActivity
+  images: any = vuexModule.store.getImagesUrl
 }
 </script>
 

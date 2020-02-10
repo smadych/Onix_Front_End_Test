@@ -6,13 +6,13 @@ main
       ModalEdit(v-if='showModalEdit' @close='close' :indexOfTask='indexTask' )
       .input-wrapper
         input.search(type='text' placeholder='title filter' v-model='search')
-        .input-date(ref='dateFilter')
-          .wrapper-input
+        .input-date()
+          .wrapper-input-date(ref='dateFilter')
             input.date-filter(type='date')
             input.date-filter(type='date')
           .wrapper-btn
             button.apply-btn(@click='runDateFilter') apply
-            button.cencel(@click='cencelDateFilter') cencel
+            button.cencel(@click='cencelDateFilter') cancel
       .wrapper(ref='kanban')
         .todo
           h4(v-if='todoArrLength > 0') {{todoArrLength}}
@@ -51,6 +51,7 @@ import { Component, Vue } from 'vue-property-decorator';
 import draggable from 'vuedraggable';
 import { Status } from '@/Interfaces';
 import ModalEdit from '../modal/ModalEdit.vue';
+import { vuexModule } from '@/store';
 
 @Component({
   components: {
@@ -61,10 +62,7 @@ import ModalEdit from '../modal/ModalEdit.vue';
 export default class Kanban extends Vue {
     status: any = Status
 
-    localStore: any = []
-
-    // An array from local storage
-    storeArr: any = []
+    vuexStore: any = vuexModule.store
 
     showModalEdit: boolean = false
 
@@ -91,8 +89,7 @@ export default class Kanban extends Vue {
     ref: any = this.$refs
 
     created() {
-      this.getDataFromStorage();
-      this.getTasks(this.storeArr);
+      this.getTasks(this.vuexStore.tasksArray);
       this.getLengthOfArrays();
     }
 
@@ -104,10 +101,6 @@ export default class Kanban extends Vue {
       this.getCurrentColumn();
       this.getLengthOfArrays();
       this.setClassDeadline();
-    }
-
-    beforeDestroy() {
-      this.addDataToStorage();
     }
 
     get filterTodoArr(): object {
@@ -126,7 +119,7 @@ export default class Kanban extends Vue {
       const date1 = this.ref.dateFilter.childNodes[0].value;
       const date2 = this.ref.dateFilter.childNodes[1].value;
       if (date1 !== '' && date2 !== '') {
-        const copyStore = this.storeArr.filter(
+        const copyStore = this.vuexStore.tasksArray.filter(
           (task: any) => new Date(task.deadline.split('.').reverse().join('-'))
           >= new Date(this.ref.dateFilter.childNodes[0].value)
           && new Date(task.deadline.split('.').reverse().join('-'))
@@ -141,17 +134,7 @@ export default class Kanban extends Vue {
       this.ref.dateFilter.childNodes[0].value = '';
       this.ref.dateFilter.childNodes[1].value = '';
       this.clearArrays();
-      this.getTasks(this.storeArr);
-    }
-
-    getDataFromStorage(): void {
-      this.localStore = sessionStorage.getItem('arr');
-      this.storeArr = JSON.parse(this.localStore);
-    }
-
-    addDataToStorage(): void {
-      this.storeArr = JSON.stringify(this.storeArr);
-      sessionStorage.setItem('arr', this.storeArr);
+      this.getTasks(this.vuexStore.tasksArray);
     }
 
     getCurrentColumn(): void {
@@ -173,9 +156,9 @@ export default class Kanban extends Vue {
     setClassDeadline(): void {
       for (let j = 0; j < 2; j += 1) {
         if (j === 0) {
-          this.setClass(this.todoArr, j);
+          this.setClass(this.filterTodoArr, j);
         } else {
-          this.setClass(this.inProgressArr, j);
+          this.setClass(this.filterInProgressArr, j);
         }
       }
     }
@@ -212,8 +195,7 @@ export default class Kanban extends Vue {
 
     close(): void {
       this.clearArrays();
-      this.getDataFromStorage();
-      this.getTasks(this.storeArr);
+      this.getTasks(this.vuexStore.tasksArray);
       this.getLengthOfArrays();
     }
 
@@ -225,21 +207,20 @@ export default class Kanban extends Vue {
     }
 
     showModalEditFunc(statusL: object): void {
-      for (let i = 0; i < this.storeArr.length; i += 1) {
-        if (this.storeArr[i] === statusL) {
+      for (let i = 0; i < this.vuexStore.tasksArray.length; i += 1) {
+        if (this.vuexStore.tasksArray[i] === statusL) {
           this.indexTask = i;
         }
       }
-      this.addDataToStorage();
       if (!this.showModalEdit) {
         this.showModalEdit = true;
       }
     }
 
     log(evt: object): void {
-      for (let i = 0; i < this.storeArr.length; i += 1) {
-        if (this.storeArr[i] === this.currentEl) {
-          this.storeArr[i].status = this.currentColumn;
+      for (let i = 0; i < this.vuexStore.tasksArray.length; i += 1) {
+        if (this.vuexStore.tasksArray[i] === this.currentEl) {
+          this.vuexStore.tasksArray[i].status = this.currentColumn;
         }
       }
     }
@@ -331,7 +312,7 @@ export default class Kanban extends Vue {
         padding: 5px;
         border: 2px solid #EAEAEA;
         border-radius: 5px;
-        .wrapper-input {
+        .wrapper-input-date {
           display: flex;
           flex-flow: wrap;
         }

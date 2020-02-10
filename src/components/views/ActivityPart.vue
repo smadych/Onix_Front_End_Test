@@ -33,11 +33,11 @@ import { vuexModule } from '@/store';
 
 @Component({})
 export default class Activity extends Vue {
-  info: object = vuexModule.store.activity
+  info: object = vuexModule.store.infoActivity
 
   currentPicture: number = 3
 
-  images: object = vuexModule.store.srcImagesActivity
+  images: object = vuexModule.store.getImagesUrl
 
   domPicture: any = this.$refs
 

@@ -3,33 +3,37 @@ transition(name='modal-fade')
   .modal-backdrop()
     .modal
       form(@submit.prevent="addTodo")
-            h5 Add new task
-            .input-wrapper(ref='getTime')
-              input.titleInput(type="text" name="title"
-              placeholder="Enter the title" v-model="addTitle")
-              input.descriptionInput(type="text" name="description"
-              placeholder="Enter a description" v-model="addDescription")
-              input(type='date' v-model='deadline')
-              p.errorMessage(v-if='showErrorMessage') {{errorMessage}}
-            .btn-wrapper
-              button.add Add
-              button.cencel(type="button" @click="close") Cencel
+        h5 Add new task
+        .input-wrapper()
+          input.titleInput(type="text" name="title"
+          placeholder="Enter the title" v-model="addTitle")
+          input.descriptionInput(type="text" name="description"
+          placeholder="Enter a description" v-model="addDescription")
+          input(type='date' ref='getTime')
+          p.errorMessage(v-if='showErrorMessage') {{vuexStore.errorMessage}}
+          p.errorMessage(v-if='showErrorDeadline') {{vuexStore.errorDeadline}}
+        .btn-wrapper
+          button.add Add
+          button.cencel(type="button" @click="close") cancel
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
+import { vuexModule } from '@/store';
 
 @Component({})
 export default class ModalAddTask extends Vue {
+  vuexStore: any = vuexModule.store
+
   addTitle: string = ''
 
   addDescription: any = ''
 
   deadline: any = ''
 
-  errorMessage: string = 'The field is empty. Please type a title and description'
-
   showErrorMessage: boolean = false
+
+  showErrorDeadline: boolean = false
 
   dom: any = this.$refs
 
@@ -38,8 +42,12 @@ export default class ModalAddTask extends Vue {
   }
 
   addTodo(): void {
+    this.showErrorMessage = false;
+    this.showErrorDeadline = false;
     if (this.addTitle === '' || this.addDescription === '') {
       this.showErrorMessage = true;
+    } else if (new Date(this.dom.getTime.value) <= new Date() || this.dom.getTime.value === '') {
+      this.showErrorDeadline = true;
     } else {
       this.getDedLine();
       this.$emit('sendTask', this.addTitle, this.addDescription, this.deadline);
@@ -49,7 +57,7 @@ export default class ModalAddTask extends Vue {
   }
 
   getDedLine(): void {
-    const time = this.deadline;
+    const time = this.dom.getTime.value;
     this.deadline = new Date(time).toLocaleDateString();
   }
 }

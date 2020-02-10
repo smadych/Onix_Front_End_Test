@@ -7,31 +7,32 @@ transition(name='modal-fade')
                 .defaultCondition(v-if='!editMode')
                     .title
                         h5 Title
-                        p {{storage[indexOfTask].title}}
+                        p {{vuexStore.tasksArray[indexOfTask].title}}
                     .description
                         h5 Description
-                        p {{storage[indexOfTask].description}}
+                        p {{vuexStore.tasksArray[indexOfTask].description}}
                 .editMode(v-else='editMode')
                     .title
                         h5 Title
-                        textarea(v-model='storage[indexOfTask].title'
-                        v-on='checkTyping(storage[indexOfTask].title)'
-                        ) {{storage[indexOfTask].title}}
+                        textarea(v-model='vuexStore.tasksArray[indexOfTask].title'
+                        v-on='checkTyping(vuexStore.tasksArray[indexOfTask].title)'
+                        ) {{vuexStore.tasksArray[indexOfTask].title}}
                     .description
                         h5 Description
-                        textarea(v-model='storage[indexOfTask].description'
-                        v-on='checkTyping(storage[indexOfTask].description)'
-                        ) {{storage[indexOfTask].description}}
+                        textarea(v-model='vuexStore.tasksArray[indexOfTask].description'
+                        v-on='checkTyping(vuexStore.tasksArray[indexOfTask].description)'
+                        ) {{vuexStore.tasksArray[indexOfTask].description}}
             .btn-wrapper
                 button.save(v-if='saveButton' @click='saveChanges') save
                 button.edit(type="button" @click="changeMode"
                 v-if="buttonMode === 'edit'") {{buttonMode}}
                 button.edit(v-else-if="buttonMode === 'cencel'"
-                type="button" @click="close") cencel
+                type="button" @click="close") cancel
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
+import { vuexModule } from '@/store';
 
 @Component({
   props: {
@@ -39,13 +40,11 @@ import { Component, Vue } from 'vue-property-decorator';
   },
 })
 export default class ModalEdit extends Vue {
+  vuexStore: any = vuexModule.store
+
   title: string = ''
 
   editMode: boolean = false
-
-  localStore: any = sessionStorage.getItem('arr')
-
-  storage: any = JSON.parse(this.localStore);
 
   buttonMode: string = 'edit'
 
@@ -62,22 +61,20 @@ export default class ModalEdit extends Vue {
   changeMode(): void {
     if (this.buttonMode === 'edit') {
       this.editMode = true;
-      this.title = this.storage[this.$props.indexOfTask].title;
-      this.description = this.storage[this.$props.indexOfTask].description;
+      this.title = this.vuexStore.tasksArray[this.$props.indexOfTask].title;
+      this.description = this.vuexStore.tasksArray[this.$props.indexOfTask].description;
       this.buttonMode = 'cencel';
     }
   }
 
   checkTyping(textareaData: any): void {
-    if (!(this.title === this.storage[this.$props.indexOfTask].title)
-    || !(this.description === this.storage[this.$props.indexOfTask].description)) {
+    if (!(this.title === this.vuexStore.tasksArray[this.$props.indexOfTask].title)
+    || !(this.description === this.vuexStore.tasksArray[this.$props.indexOfTask].description)) {
       this.saveButton = true;
     }
   }
 
   saveChanges(): void {
-    this.localStore = JSON.stringify(this.storage);
-    sessionStorage.setItem('arr', this.localStore);
     this.close();
   }
 }
