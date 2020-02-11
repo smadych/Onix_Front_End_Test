@@ -1,6 +1,6 @@
 <template lang="pug">
 transition(name='modal-fade')
-    .modal-backdrop()
+    .modal-backdrop(@click.self='close')
         .modal
             h3 Edit task
             .wrapper()
@@ -14,14 +14,14 @@ transition(name='modal-fade')
                 .editMode(v-else='editMode')
                     .title
                         h5 Title
-                        textarea(v-model='vuexStore.tasksArray[indexOfTask].title'
-                        v-on='checkTyping(vuexStore.tasksArray[indexOfTask].title)'
-                        ) {{vuexStore.tasksArray[indexOfTask].title}}
+                        textarea(v-model='title'
+                        v-on='checkTyping(title)'
+                        ) {{title}}
                     .description
                         h5 Description
-                        textarea(v-model='vuexStore.tasksArray[indexOfTask].description'
-                        v-on='checkTyping(vuexStore.tasksArray[indexOfTask].description)'
-                        ) {{vuexStore.tasksArray[indexOfTask].description}}
+                        textarea(v-model='description'
+                        v-on='checkTyping(description)'
+                        ) {{description}}
             .btn-wrapper
                 button.save(v-if='saveButton' @click='saveChanges') save
                 button.edit(type="button" @click="changeMode"
@@ -75,6 +75,8 @@ export default class ModalEdit extends Vue {
   }
 
   saveChanges(): void {
+    this.vuexStore.tasksArray[this.$props.indexOfTask].title = this.title;
+    this.vuexStore.tasksArray[this.$props.indexOfTask].description = this.description;
     this.close();
   }
 }

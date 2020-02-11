@@ -1,6 +1,6 @@
 <template lang="pug">
 transition(name='modal-fade')
-  .modal-backdrop()
+  .modal-backdrop(@click.self="close")
     .modal
       form(@submit.prevent="addTodo")
         h5 Add new task

@@ -25,6 +25,8 @@ export class Store extends VuexModule {
 
   activity: object = activity
 
+  objectForPopup: object = []
+
   srcImagesActivity: string[] = srcImagesActivity
 
   tasksArray: any[] = []
