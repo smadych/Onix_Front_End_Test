@@ -33,6 +33,8 @@ transition(name='modal-fade')
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import { vuexModule } from '@/store';
+import { TaskService } from '@/service/tasksApi';
+import { ToDo } from '@/store/todo';
 
 @Component({
   props: {
@@ -53,6 +55,10 @@ export default class ModalEdit extends Vue {
   description: string = ''
 
   saveButton: boolean = false
+
+  ts: TaskService = new TaskService()
+
+  lastError: any;
 
   close(): void {
     this.$emit('close');
@@ -75,9 +81,28 @@ export default class ModalEdit extends Vue {
   }
 
   saveChanges(): void {
-    this.vuexStore.tasksArray[this.$props.indexOfTask].title = this.title;
-    this.vuexStore.tasksArray[this.$props.indexOfTask].description = this.description;
+    const todo = this.vuexStore.tasksArray[this.$props.indexOfTask];
+
+    const updatedObject = { ...todo };
+    updatedObject.title = this.title;
+    updatedObject.description = this.description;
+    this.ts.updateToDos(updatedObject, this.updateToDo, this.error);
     this.close();
+  }
+
+  updateToDo(todo: ToDo) {
+    for (let i = 0; i < this.vuexStore.tasksArray.length; i += 1) {
+      if (this.vuexStore.tasksArray[i].id === todo.id) {
+        this.vuexStore.tasksArray[i] = todo;
+        console.log(todo);
+        break;
+      }
+    }
+  }
+
+  error(message: any) {
+    this.lastError = message;
+    alert(message);
   }
 }
 </script>

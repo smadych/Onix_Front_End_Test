@@ -25,10 +25,13 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
+import axios from 'axios';
 import { TasksInterface, Status } from '@/Interfaces';
 import ModalAddTask from '../modal/ModalAddTask.vue';
 import ModalEdit from '../modal/ModalEdit.vue';
 import { vuexModule } from '@/store';
+import { TaskService } from '@/service/tasksApi';
+import { ToDo } from '@/store/todo';
 
 @Component({
   components: {
@@ -40,17 +43,6 @@ export default class Tasks extends Vue {
   titlesTop: string[] = ['Status', 'Title', 'Description', 'Time', 'Deadline']
 
   vuexStore: any = vuexModule.store
-
-  // Status of task
-  addStatus: string = ''
-
-  // Input for title
-  addTitle: string = ''
-
-  // Input for description
-  addDescription: any = ''
-
-  deadLine: string = ''
 
   time: Date = new Date();
 
@@ -97,28 +89,27 @@ export default class Tasks extends Vue {
     }
   }
 
+  ts: TaskService = new TaskService();
   // Adds lists with tasks if an array is empty
+
   initialAddingArray(): void {
-    if (!this.vuexStore.incertTasks) {
-      this.vuexStore.tasksArray = [
-        {
-          status: Status.todo, title: 'practice', description: 'studing', time: new Date().toLocaleDateString(), deadline: this.generateDeadline(),
-        },
-        {
-          status: Status.inProgress, title: 'chilling', description: 'walk in the park', time: new Date().toLocaleDateString(), deadline: this.generateDeadline(),
-        },
-        {
-          status: Status.done, title: 'sleep', description: 'go to bad', time: new Date().toLocaleDateString(), deadline: this.generateDeadline(),
-        },
-        {
-          status: Status.done, title: 'practice', description: 'studing', time: new Date().toLocaleDateString(), deadline: this.generateDeadline(),
-        },
-        {
-          status: Status.todo, title: 'practice', description: 'studing', time: new Date().toLocaleDateString(), deadline: this.generateDeadline(),
-        },
-      ];
-      this.vuexStore.incertTasks = true;
+    this.ts.getToDos(this.setToDo, this.error);
+  }
+
+  // ds: ToDo[] = [];
+
+  setToDo(todos: ToDo[]) {
+    if (todos) {
+      this.vuexStore.tasksArray = todos;
+      // console.log(this.vuexStore.tasksArray);
     }
+  }
+
+  lastError: any;
+
+  error(message: any) {
+    this.lastError = message;
+    alert(message);
   }
 
   // Gets current time and date
@@ -140,30 +131,40 @@ export default class Tasks extends Vue {
     }
   }
 
-  addNewTask(): TasksInterface {
+  addNewTask(titleAddModal: string, descriptionAddModal: string, deadLineAddModal: string): ToDo {
     const task = {
+      id: Math.floor(Math.random() * Math.floor(99999999)),
       status: Status.todo,
-      title: this.addTitle,
-      description: this.addDescription,
-      time: new Date().toLocaleDateString(),
-      deadline: this.deadLine,
+      title: titleAddModal,
+      description: descriptionAddModal,
+      time: this.time.toLocaleDateString(),
+      deadline: deadLineAddModal,
     };
     return task;
   }
 
   // Adds new task into array
-  addTodo(): void {
-    const task = this.addNewTask();
-    this.addTitle = '';
-    this.addDescription = '';
-    this.deadLine = '';
-    this.vuexStore.tasksArray.splice(0, 0, task);
+  addTodo(title: string, description: string, deadLine: string): void {
+    this.ts.addToDos(this.addNewTask(title, description, deadLine),
+      this.didAddToDoSucces, this.error);
     this.runAnimationNewTask = true;
   }
 
+  didAddToDoSucces(todo: ToDo) {
+    this.vuexStore.tasksArray.splice(0, 0, todo);
+  }
+
   // Remove task with appropriate data from array
-  removeTask(taskEl: TasksInterface): void {
-    const indexEl: number = this.vuexStore.tasksArray.indexOf(taskEl);
+  removeTask(taskEl: ToDo): void {
+    // const indexEl: number = this.vuexStore.tasksArray.indexOf(taskEl);
+    console.log(taskEl);
+    console.log(taskEl.id);
+    this.ts.deleteToDos(taskEl.id, this.makeDeleteToDo, this.error);
+  }
+
+  makeDeleteToDo(todo: ToDo): void {
+    // console.log(todo);
+    const indexEl: number = this.vuexStore.tasksArray.indexOf(todo);
     this.vuexStore.tasksArray.splice(indexEl, 1);
   }
 
@@ -180,17 +181,13 @@ export default class Tasks extends Vue {
   }
 
   close(): void {
-    this.initialAddingArray();
     this.showModal = false;
     this.showModalEdit = false;
   }
 
   sendTask(title: string, description: string, deadLine: string): void {
-    this.addTitle = title;
-    this.addDescription = description;
-    this.deadLine = deadLine;
     this.close();
-    this.addTodo();
+    this.addTodo(title, description, deadLine);
   }
 }
 </script>

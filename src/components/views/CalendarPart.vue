@@ -39,8 +39,6 @@ export default class Calendar extends Vue {
 
   showPopup: boolean = false
 
-  text: string = ''
-
   showCalendar: boolean = true;
 
   created() {
@@ -60,7 +58,6 @@ export default class Calendar extends Vue {
   }
 
   closePopup() {
-    console.log('close');
     this.showPopup = false;
     this.showCalendar = true;
   }

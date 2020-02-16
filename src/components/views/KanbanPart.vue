@@ -49,9 +49,10 @@ main
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import draggable from 'vuedraggable';
-import { Status } from '@/Interfaces';
+import { Status, TasksInterface } from '@/Interfaces';
 import ModalEdit from '../modal/ModalEdit.vue';
 import { vuexModule } from '@/store';
+import { TaskService } from '@/service/tasksApi';
 
 @Component({
   components: {
@@ -87,6 +88,10 @@ export default class Kanban extends Vue {
     search: string = ''
 
     ref: any = this.$refs
+
+    ts: TaskService = new TaskService()
+
+    tx: string = ''
 
     created() {
       this.getTasks(this.vuexStore.tasksArray);
@@ -210,6 +215,7 @@ export default class Kanban extends Vue {
       for (let i = 0; i < this.vuexStore.tasksArray.length; i += 1) {
         if (this.vuexStore.tasksArray[i] === statusL) {
           this.indexTask = i;
+          console.log(i);
         }
       }
       if (!this.showModalEdit) {
@@ -220,9 +226,22 @@ export default class Kanban extends Vue {
     log(evt: object): void {
       for (let i = 0; i < this.vuexStore.tasksArray.length; i += 1) {
         if (this.vuexStore.tasksArray[i] === this.currentEl) {
-          this.vuexStore.tasksArray[i].status = this.currentColumn;
+          this.ts.changeStatusToDo(this.vuexStore.tasksArray[i],
+            this.currentColumn, this.changeStatus, this.error);
         }
       }
+    }
+
+    changeStatus() {
+      this.tx = '';
+      console.log('Status changed!');
+    }
+
+    lastError: any;
+
+    error(message: any) {
+      this.lastError = message;
+      alert(message);
     }
 
     checkMove(event: any): boolean {

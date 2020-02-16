@@ -10,8 +10,8 @@ transition(name='modal-fade')
           input.descriptionInput(type="text" name="description"
           placeholder="Enter a description" v-model="addDescription")
           input(type='date' ref='getTime')
-          p.errorMessage(v-if='showErrorMessage') {{vuexStore.errorMessage}}
-          p.errorMessage(v-if='showErrorDeadline') {{vuexStore.errorDeadline}}
+          p.errorMessage(v-if='showErrorMessage') {{errorMessage}}
+          p.errorMessage(v-if='showErrorDeadline') {{errorDeadline}}
         .btn-wrapper
           button.add Add
           button.cencel(type="button" @click="close") cancel
@@ -19,11 +19,12 @@ transition(name='modal-fade')
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import { vuexModule } from '@/store';
 
 @Component({})
 export default class ModalAddTask extends Vue {
-  vuexStore: any = vuexModule.store
+  errorMessage: string = 'The field is empty. Please type a title and description.'
+
+  errorDeadline: string = 'Current date is not available. Please select a new one.'
 
   addTitle: string = ''
 
@@ -49,14 +50,12 @@ export default class ModalAddTask extends Vue {
     } else if (new Date(this.dom.getTime.value) <= new Date() || this.dom.getTime.value === '') {
       this.showErrorDeadline = true;
     } else {
-      this.getDedLine();
+      this.getDeadLine();
       this.$emit('sendTask', this.addTitle, this.addDescription, this.deadline);
-      this.addTitle = '';
-      this.addDescription = '';
     }
   }
 
-  getDedLine(): void {
+  getDeadLine(): void {
     const time = this.dom.getTime.value;
     this.deadline = new Date(time).toLocaleDateString();
   }
