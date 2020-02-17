@@ -94,7 +94,6 @@ export default class ModalEdit extends Vue {
     for (let i = 0; i < this.vuexStore.tasksArray.length; i += 1) {
       if (this.vuexStore.tasksArray[i].id === todo.id) {
         this.vuexStore.tasksArray[i] = todo;
-        console.log(todo);
         break;
       }
     }

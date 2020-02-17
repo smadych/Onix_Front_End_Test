@@ -212,29 +212,16 @@ export default class Kanban extends Vue {
     }
 
     showModalEditFunc(statusL: object): void {
-      for (let i = 0; i < this.vuexStore.tasksArray.length; i += 1) {
-        if (this.vuexStore.tasksArray[i] === statusL) {
-          this.indexTask = i;
-          console.log(i);
-        }
-      }
+      this.indexTask = this.vuexStore.tasksArray.indexOf(statusL);
       if (!this.showModalEdit) {
         this.showModalEdit = true;
       }
     }
 
     log(evt: object): void {
-      for (let i = 0; i < this.vuexStore.tasksArray.length; i += 1) {
-        if (this.vuexStore.tasksArray[i] === this.currentEl) {
-          this.ts.changeStatusToDo(this.vuexStore.tasksArray[i],
-            this.currentColumn, this.changeStatus, this.error);
-        }
-      }
-    }
-
-    changeStatus() {
-      this.tx = '';
-      console.log('Status changed!');
+      const index: number = this.vuexStore.tasksArray.indexOf(this.currentEl);
+      this.ts.changeStatusToDo(this.vuexStore.tasksArray[index],
+        this.currentColumn, this.error);
     }
 
     lastError: any;

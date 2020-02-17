@@ -59,6 +59,10 @@ export default class Tasks extends Vue {
 
   indexTask: number = 0
 
+  lastError: any;
+
+  ts: TaskService = new TaskService();
+
   mounted() {
     this.initialAddingArray();
     this.addsClassForAnimation();
@@ -89,23 +93,17 @@ export default class Tasks extends Vue {
     }
   }
 
-  ts: TaskService = new TaskService();
   // Adds lists with tasks if an array is empty
 
   initialAddingArray(): void {
     this.ts.getToDos(this.setToDo, this.error);
   }
 
-  // ds: ToDo[] = [];
-
   setToDo(todos: ToDo[]) {
     if (todos) {
       this.vuexStore.tasksArray = todos;
-      // console.log(this.vuexStore.tasksArray);
     }
   }
-
-  lastError: any;
 
   error(message: any) {
     this.lastError = message;
@@ -156,16 +154,16 @@ export default class Tasks extends Vue {
 
   // Remove task with appropriate data from array
   removeTask(taskEl: ToDo): void {
-    // const indexEl: number = this.vuexStore.tasksArray.indexOf(taskEl);
-    console.log(taskEl);
-    console.log(taskEl.id);
     this.ts.deleteToDos(taskEl.id, this.makeDeleteToDo, this.error);
   }
 
   makeDeleteToDo(todo: ToDo): void {
-    // console.log(todo);
-    const indexEl: number = this.vuexStore.tasksArray.indexOf(todo);
-    this.vuexStore.tasksArray.splice(indexEl, 1);
+    for (let i = 0; i < this.vuexStore.tasksArray.length; i += 1) {
+      if (this.vuexStore.tasksArray[i].id === todo.id) {
+        this.vuexStore.tasksArray.splice(i, 1);
+        break;
+      }
+    }
   }
 
   showM(): void {
@@ -241,10 +239,7 @@ section {
       border-radius: 5px;
     }
     .notifications-block {
-      // background-color: aqua !important;
       margin: 30px auto 100px auto;
       width: 90%;
-      // min-width: 90%;
-      // min-height: 80%;
     }
 </style>

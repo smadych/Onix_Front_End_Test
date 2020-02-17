@@ -41,16 +41,13 @@ export class TaskService {
     });
   }
 
-  public changeStatusToDo(todo: ToDo, statusTodo: string,
-    succes: (todos: ToDo) => void, err: (error: any) => void) {
+  public changeStatusToDo(todo: ToDo, statusTodo: string, err: (error: any) => void) {
     this.axs.put('/todo', todo, {
       params: {
         status: statusTodo,
       },
     }).then((response) => {
       console.log(response);
-      const td: ToDo = response.data;
-      succes(td);
     }).catch((error) => {
       err(error);
       console.log(error);
